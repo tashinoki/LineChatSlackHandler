@@ -11,6 +11,13 @@ namespace LineChatHooks
 {
     class StartUp: FunctionsStartup
     {
+        public IConfiguration Configuration;
+
+        public StartUp(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddSingleton<ILineChatService, LineChatService>();
