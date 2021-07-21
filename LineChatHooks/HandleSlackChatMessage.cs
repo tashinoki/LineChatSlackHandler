@@ -13,13 +13,18 @@ using LineChatHooks.Services;
 
 namespace LineChatHooks
 {
-    public static class HandleSlackChatMessage
+    public class HandleSlackChatMessage
     {
         private static readonly HashSet<string> SlackUsers = new HashSet<string>{ "U028T03BV3K" };
-        private readonly ILi
+        private readonly ILineChatService _lineChatService;
+
+        public HandleSlackChatMessage(ILineChatService lineChatService)
+        {
+            _lineChatService = lineChatService;
+        }
 
         [FunctionName("HandleSlackChatMessage")]
-        public static async Task<IActionResult> Run(
+        public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
         {
