@@ -9,12 +9,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using LineChatHooks.Models;
+using LineChatHooks.Services;
 
 namespace LineChatHooks
 {
     public static class HandleSlackChatMessage
     {
         private static readonly HashSet<string> SlackUsers = new HashSet<string>{ "U028T03BV3K" };
+        private readonly ILi
 
         [FunctionName("HandleSlackChatMessage")]
         public static async Task<IActionResult> Run(
