@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace LineChatHooks.Models
+namespace HatenaBookmarkReminder.Models
 {
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class ChallengeResponse

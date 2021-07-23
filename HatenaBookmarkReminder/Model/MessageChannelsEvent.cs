@@ -5,20 +5,16 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace LineChatHooks.Models
+namespace HatenaBookmarkReminder.Models
 {
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     internal class MessageChannelsEvent: ChallengeResponse
     {
-        public string Token { get; set; }
-
         public string TeamId { get; set; }
 
         public string ApiAppId { get; set; }
 
         public Event Event { get; set; }
-
-        public string Type { get; set; }
 
         public IReadOnlyList<string> AuthedTeams { get; set; }
 

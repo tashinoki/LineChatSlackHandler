@@ -8,19 +8,19 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using LineChatHooks.Models;
-using LineChatHooks.Services;
+using HatenaBookmarkReminder.Models;
+using HatenaBookmarkReminder.Services;
 
-namespace LineChatHooks
+namespace HatenaBookmarkReminder
 {
     public class HandleSlackChatMessage
     {
         private static readonly HashSet<string> SlackUsers = new HashSet<string>{ "U028T03BV3K" };
-        private readonly ILineChatService _lineChatService;
+        private readonly IHatenApiService _hatenaApiService;
 
-        public HandleSlackChatMessage(ILineChatService lineChatService)
+        public HandleSlackChatMessage(IHatenApiService hatenApiService)
         {
-            _lineChatService = lineChatService;
+            _hatenaApiService = hatenApiService;
         }
 
         [FunctionName("HandleSlackChatMessage")]
@@ -32,6 +32,11 @@ namespace LineChatHooks
 
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<MessageChannelsEvent>(requestBody);
+
+            if (!string.IsNullOrEmpty(data.Challenge))
+            {
+                return new OkObjectResult(data.Challenge);
+            }
             var user = data.Event.User;
 
             //if (!IsSlackUserEvent(user)) return;
