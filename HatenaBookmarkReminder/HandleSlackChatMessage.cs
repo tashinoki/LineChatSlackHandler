@@ -41,6 +41,7 @@ namespace HatenaBookmarkReminder
 
             //if (!IsSlackUserEvent(user)) return;
 
+            await _hatenaApiService.OAuthAsync();
             return new OkObjectResult(data.Token);
         }
 
