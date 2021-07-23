@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace LineChatHooks.Services
+namespace HatenaBookmarkReminder.Services
 {
     public interface ILineChatService
     {

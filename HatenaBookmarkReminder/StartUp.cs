@@ -4,23 +4,16 @@ using System.Text;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using LineChatHooks.Services;
+using HatenaBookmarkReminder.Services;
 
-[assembly: FunctionsStartup(typeof(LineChatHooks.StartUp))]
-namespace LineChatHooks
+[assembly: FunctionsStartup(typeof(HatenaBookmarkReminder.StartUp))]
+namespace HatenaBookmarkReminder
 {
     class StartUp: FunctionsStartup
     {
-        public IConfiguration Configuration;
-
-        public StartUp(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddSingleton<ILineChatService, LineChatService>();
+            builder.Services.AddSingleton<IHatenApiService, HatenaApiService>();
         }
     }
 }
