@@ -8,7 +8,7 @@ using Newtonsoft.Json.Serialization;
 namespace LineChatHooks.Models
 {
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class MessageChannelsEvent
+    internal class MessageChannelsEvent: ChallengeResponse
     {
         public string Token { get; set; }
 
