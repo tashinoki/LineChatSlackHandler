@@ -23,6 +23,8 @@ namespace HatenaBookmarkReminder.Services
             request.Headers.Add("Authorization", $"OAuth oauth_callback=oob,oauth_consumer_key={_hatenaKey},oauth_nonce=0c670efea71547422662,oauth_signature=lvQC7AXTRIaqxbjwVGgPlYuNaaw%3D,oauth_signature_method=HMAC-SHA1,oauth_timestamp=1291689730,oauth_version=1.0");
             var response = await _httpClient.SendAsync(request);
             var content = await response.Content.ReadAsStringAsync();
+        
+        
         }
     }
 }
