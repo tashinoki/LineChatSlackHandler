@@ -9,18 +9,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using HatenaBookmarkReminder.Models;
-using HatenaBookmarkReminder.Services;
 
 namespace HatenaBookmarkReminder
 {
     public class HandleSlackChatMessage
     {
         private static readonly HashSet<string> SlackUsers = new HashSet<string>{ "U028T03BV3K" };
-        private readonly IHatenApiService _hatenaApiService;
 
-        public HandleSlackChatMessage(IHatenApiService hatenApiService)
+        public HandleSlackChatMessage()
         {
-            _hatenaApiService = hatenApiService;
         }
 
         [FunctionName("HandleSlackChatMessage")]
@@ -39,9 +36,6 @@ namespace HatenaBookmarkReminder
             }
             var user = data.Event.User;
 
-            //if (!IsSlackUserEvent(user)) return;
-
-            await _hatenaApiService.OAuthAsync();
             return new OkObjectResult(data.Token);
         }
 
