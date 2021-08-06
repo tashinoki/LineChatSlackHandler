@@ -20,7 +20,7 @@ namespace HatenaBookmarkReminder
         {
         }
 
-        [FunctionName("HandleSlackChatMessage")]
+        [FunctionName("HandleSlackChat")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
