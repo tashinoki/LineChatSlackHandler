@@ -13,7 +13,7 @@ namespace HatenaBookmarkReminder
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IMessageMappingService, MessageMappingService>();
+            services.AddSingleton<IChannelMappingService, ChannelMappingService>();
             services.AddSingleton<ILineChatService, LineChatService>();
             services.AddSingleton<ISlackService, SlackService>();
         }
