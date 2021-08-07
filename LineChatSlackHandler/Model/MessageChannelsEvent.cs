@@ -11,7 +11,7 @@ namespace LineChatSlackHandler.Models
 
         public string ApiAppId { get; set; }
 
-        public Event Event { get; set; }
+        public SlackEvent Event { get; set; }
 
         public IReadOnlyList<string> AuthedTeams { get; set; }
 
@@ -21,7 +21,7 @@ namespace LineChatSlackHandler.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class Event
+    public class SlackEvent
     {
         public string Message { get; set; }
 

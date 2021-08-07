@@ -15,12 +15,18 @@ namespace LineChatSlackHandler
 {
     public class HandleSlackChatMessage
     {
-        private static readonly HashSet<string> SlackUsers = new HashSet<string>{ "U028T03BV3K" };
-
         private readonly IChannelMappingService _channelMappingService;
-        public HandleSlackChatMessage(IChannelMappingService channelMappingService)
+        private readonly ILineChatService _lineChatService;
+        private readonly ISlackService _slackService;
+
+        public HandleSlackChatMessage(
+            IChannelMappingService channelMappingService,
+            ILineChatService lineChatService,
+            ISlackService slackService)
         {
             _channelMappingService = channelMappingService;
+            _lineChatService = lineChatService;
+            _slackService = slackService;
         }
 
         [FunctionName("HandleSlackChat")]
@@ -43,8 +49,5 @@ namespace LineChatSlackHandler
 
             return new OkObjectResult(data.Token);
         }
-
-        private static bool IsSlackUserEvent(string User)
-            => SlackUsers.Contains(User);
     }
 }

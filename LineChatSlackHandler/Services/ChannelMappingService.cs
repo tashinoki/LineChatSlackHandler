@@ -24,10 +24,10 @@ namespace LineChatSlackHandler.Services
             if (lineChannelId is null || string.IsNullOrWhiteSpace(lineChannelId))
                 throw new ArgumentNullException("Line Channle Idが NULL もしくはからの値です。");
 
-            var slackCannelId = _channelMapper.FirstOrDefault(x => x.Value.Contains(lineChannelId)).Key;
+            var slackChannelId = _channelMapper.FirstOrDefault(x => x.Value.Contains(lineChannelId)).Key;
 
-            if (slackCannelId is null)
-                throw new Exception("");
+            if (slackChannelId is null)
+                throw new Exception($"Line Channel Id: {lineChannelId}に対応する Slack Channel Idはありません。");
 
             return new ChannelSwitchEntity
             {
