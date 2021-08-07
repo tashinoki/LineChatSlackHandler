@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace HatenaBookmarkReminder.Models
+namespace LineChatSlackHandler.Models
 {
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     internal class MessageChannelsEvent: ChallengeResponse
@@ -14,7 +11,7 @@ namespace HatenaBookmarkReminder.Models
 
         public string ApiAppId { get; set; }
 
-        public Event Event { get; set; }
+        public SlackEvent Event { get; set; }
 
         public IReadOnlyList<string> AuthedTeams { get; set; }
 
@@ -24,7 +21,7 @@ namespace HatenaBookmarkReminder.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class Event
+    public class SlackEvent
     {
         public string Message { get; set; }
 

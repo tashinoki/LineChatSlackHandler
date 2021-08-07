@@ -1,12 +1,20 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
+using LineChatSlackHandler.Services;
 
-[assembly: FunctionsStartup(typeof(HatenaBookmarkReminder.StartUp))]
-namespace HatenaBookmarkReminder
+[assembly: FunctionsStartup(typeof(LineChatSlackHandler.StartUp))]
+namespace LineChatSlackHandler
 {
     class StartUp: FunctionsStartup
     {
         public override void Configure(IFunctionsHostBuilder builder)
+        {
+            builder.Services.AddSingleton<IChannelMappingService, ChannelMappingService>();
+            builder.Services.AddSingleton<ILineChatService, LineChatService>();
+            builder.Services.AddSingleton<ISlackService, SlackService>();
+        }
+
+        public void ConfigureServices(IServiceCollection services)
         {
         }
     }
