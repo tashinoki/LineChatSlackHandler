@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace LineChatSlackHandler.Services
 {
-    interface ISlackService
+    public interface ISlackService
     {
         public Task SendMessage();
     }

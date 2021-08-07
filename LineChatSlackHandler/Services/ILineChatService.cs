@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LineChatSlackHandler.Services
 {
-    interface ILineChatService
+    public interface ILineChatService
     {
     }
 }
