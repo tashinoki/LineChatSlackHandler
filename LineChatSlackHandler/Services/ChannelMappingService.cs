@@ -11,11 +11,11 @@ namespace LineChatSlackHandler.Services
         public ChannelMappingService()
         { }
 
-        // { "SlackChannel" => "LineChannel" }
+        // { "SlackChannel" => "LineUserId" }
         // Todo
         // InMemoryかTableStorageに書き換える
         private static readonly Dictionary<string, string> _channelMapper = new Dictionary<string, string> {
-            { "C02B6KW4K4G", "hogehoge" }
+            { "C02B6KW4K4G", "U57853f60cf6cbc8db966086785a9f591" }
         };
 
         public ChannelSwitchEntity GetWithLineChannel(string lineChannelId)
@@ -42,12 +42,12 @@ namespace LineChatSlackHandler.Services
             if (slackChannelId is null || string.IsNullOrWhiteSpace(slackChannelId))
                 throw new ArgumentNullException("Slack Channle Idが NULL もしくはからの値です。");
 
-            if (_channelMapper.TryGetValue(slackChannelId, out var lineChannelId))
+            if (_channelMapper.TryGetValue(slackChannelId, out var lineUserId))
             {
                 return new ChannelSwitchEntity
                 {
                     SlackChannelId = slackChannelId,
-                    LineChannelId = lineChannelId
+                    LineChannelId = lineUserId
                 };
             }
 

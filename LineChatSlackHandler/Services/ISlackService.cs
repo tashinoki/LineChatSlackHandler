@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using Line.Messaging.Webhooks;
 
 namespace LineChatSlackHandler.Services
 {
     public interface ISlackService
     {
-        public Task SendMessage();
+        public Task SendMessage(IReadOnlyList<MessageEvent> messageEvents);
     }
 }
