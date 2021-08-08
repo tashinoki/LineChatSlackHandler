@@ -33,18 +33,10 @@ namespace LineChatSlackHandler.Services
                 var channelSwith = _channelMappingService.GetWithLineChannel(messageEvent.Source.UserId);
             }
 
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync("chat.postMessage", new Dictionary<string, string>
+            var response = await _httpClient.PostAsJsonAsync("chat.postMessage", new Dictionary<string, string>
             {
                 { "channel", "C02B6KW4K4G" },
                 { "text", "hello" }
             });
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
     }
 }
