@@ -13,13 +13,13 @@ using LineChatSlackHandler.Services;
 
 namespace LineChatSlackHandler
 {
-    public class HandleSlackChatMessage
+    public class SlackMessageHandler
     {
         private readonly IChannelMappingService _channelMappingService;
         private readonly ILineChatService _lineChatService;
         private readonly ISlackService _slackService;
 
-        public HandleSlackChatMessage(
+        public SlackMessageHandler(
             IChannelMappingService channelMappingService,
             ILineChatService lineChatService,
             ISlackService slackService)
@@ -29,7 +29,7 @@ namespace LineChatSlackHandler
             _slackService = slackService;
         }
 
-        [FunctionName("HandleSlackChat")]
+        [FunctionName("SlackMessageHandler")]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
