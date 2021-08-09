@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Line.Messaging.Webhooks;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
-using Line.Messaging.Webhooks;
-using System.Threading.Tasks;
 using System.Security.Cryptography;
-using Newtonsoft.Json;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace LineChatSlackHandler.Extensions
 {

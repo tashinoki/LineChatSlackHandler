@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LineChatSlackHandler.Models;
-using Line.Messaging;
-using Line.Messaging.Webhooks;
-using LineChatSlackHandler.Repository;
+﻿using Line.Messaging.Webhooks;
 using LineChatSlackHandler.Entity;
+using LineChatSlackHandler.Models;
+using LineChatSlackHandler.Repository;
+using System;
+using System.Collections.Generic;
 
 namespace LineChatSlackHandler.Factory
 {
@@ -39,8 +37,7 @@ namespace LineChatSlackHandler.Factory
 
                     return new SlackMessage {
                         Channel = mappingConfig.SlackChannelId,
-                        Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text),
-                        Username = "木下賢也"
+                        Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text)
                     };
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");

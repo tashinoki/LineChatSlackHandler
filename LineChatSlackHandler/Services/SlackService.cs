@@ -1,12 +1,9 @@
-﻿using System;
+﻿using LineChatSlackHandler.Models;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using LineChatSlackHandler.Entity;
-using Line.Messaging.Webhooks;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using LineChatSlackHandler.Models;
+using System.Threading.Tasks;
 
 namespace LineChatSlackHandler.Services
 {

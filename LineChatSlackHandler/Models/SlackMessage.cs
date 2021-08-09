@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
 namespace LineChatSlackHandler.Models
@@ -12,7 +9,5 @@ namespace LineChatSlackHandler.Models
         public string Channel { get; set; }
 
         public string Text { get; set; }
-
-        public string Username { get; set; }
     }
 }
