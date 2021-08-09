@@ -4,10 +4,12 @@ using System.Text;
 
 namespace LineChatSlackHandler.Entity
 {
-    public class ChannelSwitchEntity
+    public class ChannelMappingConfig
     {
         public string SlackChannelId { get; set; }
 
-        public string LineChannelId { get; set; }
+        public string LineUserId { get; set; }
+
+        public string LineBotId { get; set; }
     }
 }

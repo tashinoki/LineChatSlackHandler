@@ -7,8 +7,8 @@ namespace LineChatSlackHandler.Services
 {
     public interface IChannelMappingService
     {
-        public ChannelSwitchEntity GetWithLineChannel(string lineChannelId);
+        public ChannelMappingConfig GetWithLineChannel(string lineChannelId);
 
-        public ChannelSwitchEntity GetWithSlackChannel(string slackChannelId);
+        public ChannelMappingConfig GetWithSlackChannel(string slackChannelId);
     }
 }

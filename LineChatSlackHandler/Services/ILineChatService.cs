@@ -9,6 +9,6 @@ namespace LineChatSlackHandler.Services
 {
     public interface ILineChatService
     {
-        public Task SendMessageAsync(SlackEvent slackEvent, ChannelSwitchEntity channelSwitch);
+        public Task SendMessageAsync(SlackEvent slackEvent, ChannelMappingConfig channelSwitch);
     }
 }

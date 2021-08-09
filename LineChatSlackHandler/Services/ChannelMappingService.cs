@@ -11,14 +11,14 @@ namespace LineChatSlackHandler.Services
         public ChannelMappingService()
         { }
 
-        // { "SlackChannel" => "LineChannel" }
+        // { "SlackChannel" => "LineUserId" }
         // Todo
         // InMemoryかTableStorageに書き換える
         private static readonly Dictionary<string, string> _channelMapper = new Dictionary<string, string> {
-            { "C02B6KW4K4G", "hogehoge" }
+            { "C02B6KW4K4G", "U57853f60cf6cbc8db966086785a9f591" }
         };
 
-        public ChannelSwitchEntity GetWithLineChannel(string lineChannelId)
+        public ChannelMappingConfig GetWithLineChannel(string lineChannelId)
         {
 
             if (lineChannelId is null || string.IsNullOrWhiteSpace(lineChannelId))
@@ -29,25 +29,25 @@ namespace LineChatSlackHandler.Services
             if (slackChannelId is null)
                 throw new Exception($"Line Channel Id: {lineChannelId}に対応する Slack Channel Idはありません。");
 
-            return new ChannelSwitchEntity
+            return new ChannelMappingConfig
             {
                 SlackChannelId = slackChannelId,
-                LineChannelId = lineChannelId
+                LineUserId = lineChannelId
 
             };
         }
 
-        public ChannelSwitchEntity GetWithSlackChannel(string slackChannelId)
+        public ChannelMappingConfig GetWithSlackChannel(string slackChannelId)
         {
             if (slackChannelId is null || string.IsNullOrWhiteSpace(slackChannelId))
                 throw new ArgumentNullException("Slack Channle Idが NULL もしくはからの値です。");
 
-            if (_channelMapper.TryGetValue(slackChannelId, out var lineChannelId))
+            if (_channelMapper.TryGetValue(slackChannelId, out var lineUserId))
             {
-                return new ChannelSwitchEntity
+                return new ChannelMappingConfig
                 {
                     SlackChannelId = slackChannelId,
-                    LineChannelId = lineChannelId
+                    LineUserId = lineUserId
                 };
             }
 
