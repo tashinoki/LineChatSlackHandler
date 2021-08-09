@@ -15,6 +15,8 @@ using LineChatSlackHandler.Services;
 using Line.Messaging;
 using Line.Messaging.Webhooks;
 using LineChatSlackHandler.Factory;
+using System.Net.Http;
+using LineChatSlackHandler.Extensions;
 
 namespace LineChatSlackHandler
 {
@@ -40,21 +42,17 @@ namespace LineChatSlackHandler
 
         [FunctionName("LineMessagingEventHandler")]
         public async Task Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequestMessage req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            var data = JsonConvert.DeserializeObject<LineWebhookRequest>(requestBody);
+            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+            //var data = JsonConvert.DeserializeObject<LineWebhookRequest>(requestBody);
 
-            if (data.Events.Count == 0)
-            {
-                log.LogInformation("イベントの数が0個です。");
-                return;
-            }
+            (var destination, var messageEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
 
-            var slackMessages = _messageFactory.CreateSlackMessages(data.Destination, data.Events);
+            var slackMessages = _messageFactory.CreateSlackMessages(destination, messageEvents);
 
             await _slackService.SendMessagesAsync(slackMessages);
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));

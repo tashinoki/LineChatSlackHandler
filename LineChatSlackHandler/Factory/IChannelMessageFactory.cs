@@ -8,6 +8,6 @@ namespace LineChatSlackHandler.Factory
 {
     public interface IChannelMessageFactory
     {
-        public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IReadOnlyList<MessageEvent> messageEvents);
+        public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents);
     }
 }

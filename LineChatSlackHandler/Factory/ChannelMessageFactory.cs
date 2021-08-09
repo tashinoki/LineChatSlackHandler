@@ -18,7 +18,7 @@ namespace LineChatSlackHandler.Factory
             _mappingConfigRepository = channelMappingConfigRepository;
         }
 
-        public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IReadOnlyList<MessageEvent> messageEvents)
+        public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents)
         {
             IList<SlackMessage> messages = new List<SlackMessage>();
 
@@ -36,15 +36,11 @@ namespace LineChatSlackHandler.Factory
             switch(messageEvent.Message.Type)
             {
                 case EventMessageType.Text:
-                    if (messageEvent.Message is TextEventMessage)
-                    {
-                        string textEvent = ((TextEventMessage)messageEvent.Message).Text;
-                    }
 
-                        return new SlackMessage {
-                        Channel = mappingConfig.SlackChannelId,
-                        Text = ""
-                    };
+                    return new SlackMessage {
+                    Channel = mappingConfig.SlackChannelId,
+                    Text = (messageEvent.Message as TextEventMessage)?.Text
+                };
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");
             }
