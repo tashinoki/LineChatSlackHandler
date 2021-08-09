@@ -47,9 +47,6 @@ namespace LineChatSlackHandler
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            //string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            //var data = JsonConvert.DeserializeObject<LineWebhookRequest>(requestBody);
-
             (var destination, var messageEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
 
             var slackMessages = _messageFactory.CreateSlackMessages(destination, messageEvents);
@@ -64,6 +61,7 @@ namespace LineChatSlackHandler
             //{
             //    log.LogInformation(e.Message);
             //}
+        
         }
     }
 }

@@ -28,7 +28,7 @@ namespace LineChatSlackHandler.Factory
                 var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
                 messages.Add(slackMessage);
             }
-            return (IReadOnlyList<SlackMessage>)messages;
+            return messages as IReadOnlyList<SlackMessage>;
         }
 
         private SlackMessage CreateSlackMessage(ChannelMappingConfig mappingConfig, MessageEvent messageEvent)
@@ -38,12 +38,14 @@ namespace LineChatSlackHandler.Factory
                 case EventMessageType.Text:
 
                     return new SlackMessage {
-                    Channel = mappingConfig.SlackChannelId,
-                    Text = (messageEvent.Message as TextEventMessage)?.Text
-                };
+                        Channel = mappingConfig.SlackChannelId,
+                        Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text),
+                        Username = "木下賢也"
+                    };
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");
             }
+            string AttatchMention(string text) => $"<@U0226MT50F6>\n{text}";
         }
     }
 }

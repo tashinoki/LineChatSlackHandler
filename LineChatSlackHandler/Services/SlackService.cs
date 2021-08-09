@@ -37,7 +37,7 @@ namespace LineChatSlackHandler.Services
 
         private async Task PostMessageAsync(SlackMessage slackMessage)
         {
-            var response = await _httpClient.PostAsJsonAsync<SlackMessage>("chat.postMessage", slackMessage);
+            var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
         }
     }
 }

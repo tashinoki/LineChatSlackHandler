@@ -12,5 +12,7 @@ namespace LineChatSlackHandler.Models
         public string Channel { get; set; }
 
         public string Text { get; set; }
+
+        public string Username { get; set; }
     }
 }
