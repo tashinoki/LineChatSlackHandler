@@ -18,7 +18,7 @@ namespace LineChatSlackHandler.Services
                 Environment.GetEnvironmentVariable("LineAccessToken")
             );
 
-        public async Task SendMessageAsync(SlackEvent slackEvent, ChannelSwitchEntity channelSwitch)
+        public async Task SendMessageAsync(SlackEvent slackEvent, ChannelMappingConfig channelSwitch)
         {
         }
     }

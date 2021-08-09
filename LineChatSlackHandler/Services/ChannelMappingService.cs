@@ -18,7 +18,7 @@ namespace LineChatSlackHandler.Services
             { "C02B6KW4K4G", "U57853f60cf6cbc8db966086785a9f591" }
         };
 
-        public ChannelSwitchEntity GetWithLineChannel(string lineChannelId)
+        public ChannelMappingConfig GetWithLineChannel(string lineChannelId)
         {
 
             if (lineChannelId is null || string.IsNullOrWhiteSpace(lineChannelId))
@@ -29,7 +29,7 @@ namespace LineChatSlackHandler.Services
             if (slackChannelId is null)
                 throw new Exception($"Line Channel Id: {lineChannelId}に対応する Slack Channel Idはありません。");
 
-            return new ChannelSwitchEntity
+            return new ChannelMappingConfig
             {
                 SlackChannelId = slackChannelId,
                 LineChannelId = lineChannelId
@@ -37,14 +37,14 @@ namespace LineChatSlackHandler.Services
             };
         }
 
-        public ChannelSwitchEntity GetWithSlackChannel(string slackChannelId)
+        public ChannelMappingConfig GetWithSlackChannel(string slackChannelId)
         {
             if (slackChannelId is null || string.IsNullOrWhiteSpace(slackChannelId))
                 throw new ArgumentNullException("Slack Channle Idが NULL もしくはからの値です。");
 
             if (_channelMapper.TryGetValue(slackChannelId, out var lineUserId))
             {
-                return new ChannelSwitchEntity
+                return new ChannelMappingConfig
                 {
                     SlackChannelId = slackChannelId,
                     LineChannelId = lineUserId

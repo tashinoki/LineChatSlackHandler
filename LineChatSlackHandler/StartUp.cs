@@ -1,6 +1,7 @@
 ﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
 using LineChatSlackHandler.Services;
+using LineChatSlackHandler.Repository;
 
 [assembly: FunctionsStartup(typeof(LineChatSlackHandler.StartUp))]
 namespace LineChatSlackHandler
@@ -12,6 +13,7 @@ namespace LineChatSlackHandler
             builder.Services.AddSingleton<IChannelMappingService, ChannelMappingService>();
             builder.Services.AddSingleton<ILineChatService, LineChatService>();
             builder.Services.AddSingleton<ISlackService, SlackService>();
+            builder.Services.AddSingleton<IChannelMappingConfigRepository, ChannelMappingConfigRepository>();
         }
 
         public void ConfigureServices(IServiceCollection services)

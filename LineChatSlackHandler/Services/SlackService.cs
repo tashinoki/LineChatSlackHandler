@@ -27,8 +27,8 @@ namespace LineChatSlackHandler.Services
         }
 
         public async Task SendMessage(IReadOnlyList<MessageEvent> messageEvents)
-        { 
-            foreach(var messageEvent in messageEvents)
+        {
+            foreach (var messageEvent in messageEvents)
             {
                 var channelSwith = _channelMappingService.GetWithLineChannel(messageEvent.Source.UserId);
             }
@@ -38,5 +38,6 @@ namespace LineChatSlackHandler.Services
                 { "channel", "C02B6KW4K4G" },
                 { "text", "hello" }
             });
+        }
     }
 }
