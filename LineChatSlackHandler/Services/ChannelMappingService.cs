@@ -32,7 +32,7 @@ namespace LineChatSlackHandler.Services
             return new ChannelMappingConfig
             {
                 SlackChannelId = slackChannelId,
-                LineChannelId = lineChannelId
+                LineUserId = lineChannelId
 
             };
         }
@@ -47,7 +47,7 @@ namespace LineChatSlackHandler.Services
                 return new ChannelMappingConfig
                 {
                     SlackChannelId = slackChannelId,
-                    LineChannelId = lineUserId
+                    LineUserId = lineUserId
                 };
             }
 

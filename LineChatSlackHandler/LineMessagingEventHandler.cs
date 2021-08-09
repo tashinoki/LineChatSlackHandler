@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -13,6 +14,7 @@ using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Services;
 using Line.Messaging;
 using Line.Messaging.Webhooks;
+using LineChatSlackHandler.Factory;
 
 namespace LineChatSlackHandler
 {
@@ -22,15 +24,18 @@ namespace LineChatSlackHandler
         private readonly IChannelMappingService _channelMappingService;
         private readonly ILineChatService _lineChatService;
         private readonly ISlackService _slackService;
+        private readonly IChannelMessageFactory _messageFactory;
 
         public LineMessagingEventHandler(
             IChannelMappingService channelMappingService,
             ILineChatService lineChatService,
-            ISlackService slackService)
+            ISlackService slackService,
+            IChannelMessageFactory messageFactory)
         {
             _channelMappingService = channelMappingService;
             _lineChatService = lineChatService;
             _slackService = slackService;
+            _messageFactory = messageFactory;
         }
 
         [FunctionName("LineMessagingEventHandler")]
@@ -45,14 +50,13 @@ namespace LineChatSlackHandler
 
             if (data.Events.Count == 0)
             {
-                log.LogInformation("イベントの数が0です。");
+                log.LogInformation("イベントの数が0個です。");
                 return;
             }
 
-            var mappings = data.Events.Select((MessageEvent messageEvent)
-                => _channelMappingService.GetWithLineChannel(messageEvent.Source.UserId));
+            var slackMessages = _messageFactory.CreateSlackMessages(data.Destination, data.Events);
 
-            await _slackService.SendMessage(data.Events);
+            await _slackService.SendMessagesAsync(slackMessages);
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
             //try
             //{

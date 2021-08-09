@@ -6,6 +6,7 @@ using LineChatSlackHandler.Entity;
 using Line.Messaging.Webhooks;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using LineChatSlackHandler.Models;
 
 namespace LineChatSlackHandler.Services
 {
@@ -26,18 +27,17 @@ namespace LineChatSlackHandler.Services
             _channelMappingService = channelMappingService;
         }
 
-        public async Task SendMessage(IReadOnlyList<MessageEvent> messageEvents)
+        public async Task SendMessagesAsync(IReadOnlyList<SlackMessage> messages)
         {
-            foreach (var messageEvent in messageEvents)
+            foreach (var message in messages)
             {
-                var channelSwith = _channelMappingService.GetWithLineChannel(messageEvent.Source.UserId);
+                await PostMessageAsync(message);
             }
+        }
 
-            var response = await _httpClient.PostAsJsonAsync("chat.postMessage", new Dictionary<string, string>
-            {
-                { "channel", "C02B6KW4K4G" },
-                { "text", "hello" }
-            });
+        private async Task PostMessageAsync(SlackMessage slackMessage)
+        {
+            var response = await _httpClient.PostAsJsonAsync<SlackMessage>("chat.postMessage", slackMessage);
         }
     }
 }

@@ -8,6 +8,8 @@ namespace LineChatSlackHandler.Entity
     {
         public string SlackChannelId { get; set; }
 
-        public string LineChannelId { get; set; }
+        public string LineUserId { get; set; }
+
+        public string LineBotId { get; set; }
     }
 }
