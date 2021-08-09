@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using LineChatSlackHandler.Services;
 using LineChatSlackHandler.Repository;
+using LineChatSlackHandler.Factory;
 
 [assembly: FunctionsStartup(typeof(LineChatSlackHandler.StartUp))]
 namespace LineChatSlackHandler
@@ -14,6 +15,7 @@ namespace LineChatSlackHandler
             builder.Services.AddSingleton<ILineChatService, LineChatService>();
             builder.Services.AddSingleton<ISlackService, SlackService>();
             builder.Services.AddSingleton<IChannelMappingConfigRepository, ChannelMappingConfigRepository>();
+            builder.Services.AddSingleton<IChannelMessageFactory, ChannelMessageFactory>();
         }
 
         public void ConfigureServices(IServiceCollection services)

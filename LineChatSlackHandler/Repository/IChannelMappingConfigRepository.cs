@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LineChatSlackHandler.Repository
 {
-    interface IChannelMappingConfigRepository
+    public interface IChannelMappingConfigRepository
     {
     }
 }
