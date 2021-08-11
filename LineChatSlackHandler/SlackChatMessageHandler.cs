@@ -42,7 +42,7 @@ namespace LineChatSlackHandler
                 return new OkObjectResult(data.Challenge);
             }
 
-            _messageFactory.Create();
+            _messageFactory.Create(data.Event);
             var user = data.Event.User;
 
             return new OkObjectResult(data.Token);
