@@ -44,5 +44,8 @@ namespace LineChatSlackHandler.Factory
             }
             string AttatchMention(string text) => $"<@U0226MT50F6>\n{text}";
         }
+
+        public void CreateLineMessage()
+        { }
     }
 }

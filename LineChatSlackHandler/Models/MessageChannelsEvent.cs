@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json.Converters;
 
 namespace LineChatSlackHandler.Models
 {
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class MessageChannelsEvent: ChallengeResponse
+    internal class MessageChannelsEvent : ChallengeResponse
     {
         public string TeamId { get; set; }
 
@@ -36,5 +37,16 @@ namespace LineChatSlackHandler.Models
         public string EventTs { get; set; }
 
         public string ChannelType { get; set; }
+
+        public string Type { get; set; }
+
+        public SlackEventSubType Subtype { get; set; }
+    }
+
+    [JsonConverter(typeof(StringEnumConverter), typeof(SnakeCaseNamingStrategy))]
+    public enum SlackEventSubType
+    {
+        Text,
+        FileShare
     }
 }
