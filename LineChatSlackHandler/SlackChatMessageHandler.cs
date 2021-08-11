@@ -10,23 +10,21 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Services;
+using LineChatSlackHandler.Factory;
 
 namespace LineChatSlackHandler
 {
     public class SlackMessageHandler
     {
-        private readonly IChannelMappingService _channelMappingService;
         private readonly ILineChatService _lineChatService;
-        private readonly ISlackService _slackService;
+        private readonly ILineMessageFactory _messageFactory;
 
         public SlackMessageHandler(
-            IChannelMappingService channelMappingService,
             ILineChatService lineChatService,
-            ISlackService slackService)
+            ILineMessageFactory messageFactory)
         {
-            _channelMappingService = channelMappingService;
             _lineChatService = lineChatService;
-            _slackService = slackService;
+            _messageFactory = messageFactory;
         }
 
         [FunctionName("SlackMessageHandler")]
@@ -44,7 +42,7 @@ namespace LineChatSlackHandler
                 return new OkObjectResult(data.Challenge);
             }
 
-            var channelSwitch = _channelMappingService.GetWithSlackChannel(data.Event.Channel);
+            _messageFactory.Create();
             var user = data.Event.User;
 
             return new OkObjectResult(data.Token);

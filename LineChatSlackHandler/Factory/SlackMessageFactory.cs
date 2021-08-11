@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace LineChatSlackHandler.Factory
 {
-    public class SlackMessageFactory: IChannelMessageFactory
+    public class SlackMessageFactory: ISlackMessageFactory
     {
         private readonly IChannelMappingConfigRepository _mappingConfigRepository;
 
