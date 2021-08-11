@@ -7,11 +7,11 @@ using System.Collections.Generic;
 
 namespace LineChatSlackHandler.Factory
 {
-    public class ChannelMessageFactory: IChannelMessageFactory
+    public class SlackMessageFactory: IChannelMessageFactory
     {
         private readonly IChannelMappingConfigRepository _mappingConfigRepository;
 
-        public ChannelMessageFactory(IChannelMappingConfigRepository channelMappingConfigRepository)
+        public SlackMessageFactory(IChannelMappingConfigRepository channelMappingConfigRepository)
         {
             _mappingConfigRepository = channelMappingConfigRepository;
         }
@@ -42,10 +42,11 @@ namespace LineChatSlackHandler.Factory
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");
             }
-            string AttatchMention(string text) => $"<@U0226MT50F6>\n{text}";
-        }
 
-        public void CreateLineMessage()
-        { }
+            #region LocalFunction
+            // Todo: remove hard coding
+            string AttatchMention(string text) => $"<@U0226MT50F6>\n{text}";
+            #endregion
+        }
     }
 }

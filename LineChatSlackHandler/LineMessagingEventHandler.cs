@@ -16,13 +16,13 @@ namespace LineChatSlackHandler
         private readonly IChannelMappingService _channelMappingService;
         private readonly ILineChatService _lineChatService;
         private readonly ISlackService _slackService;
-        private readonly IChannelMessageFactory _messageFactory;
+        private readonly ISlackMessageFactory _messageFactory;
 
         public LineMessagingEventHandler(
             IChannelMappingService channelMappingService,
             ILineChatService lineChatService,
             ISlackService slackService,
-            IChannelMessageFactory messageFactory)
+            ISlackMessageFactory messageFactory)
         {
             _channelMappingService = channelMappingService;
             _lineChatService = lineChatService;
