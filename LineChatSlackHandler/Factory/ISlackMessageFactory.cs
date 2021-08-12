@@ -6,7 +6,7 @@ using Line.Messaging.Webhooks;
 
 namespace LineChatSlackHandler.Factory
 {
-    public interface IChannelMessageFactory
+    public interface ISlackMessageFactory
     {
         public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents);
     }

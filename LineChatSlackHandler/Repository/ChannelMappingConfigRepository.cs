@@ -32,9 +32,20 @@ namespace LineChatSlackHandler.Repository
             };
         }
 
-        public ChannelMappingConfig GetWithSlackChannelId(string channelId, string botId)
+        public ChannelMappingConfig GetWithSlackChannelId(string channelId)
         {
-            throw new Exception();
+            if (string.IsNullOrEmpty(channelId))
+                throw new ArgumentException("不正な Channel Id です");
+
+            if (!_mappingConfigStorage.TryGetValue(channelId, out var lineUserId))
+                throw new Exception("登録されていないチャンネル ID です");
+
+            return new ChannelMappingConfig
+            {
+                LineBotId = "",
+                LineUserId = lineUserId,
+                SlackChannelId = channelId,
+            };
         }
     }
 }
