@@ -20,7 +20,7 @@ namespace LineChatSlackHandler.Services
 
         public async Task SendMessageAsync(LineMessage message)
         {
-            _messagingClient.PushMessageAsync(message.ToUserId, message.Message);
+            _messagingClient.PushMessageAsync(message.ToUserId,  new List<ISendMessage> { message.Message });
         }
     }
 }
