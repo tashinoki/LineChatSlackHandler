@@ -9,6 +9,6 @@ namespace LineChatSlackHandler.Repository
     {
         public ChannelMappingConfig GetWithLineUserId(string userId, string botId);
 
-        public ChannelMappingConfig GetWithSlackChannelId(string botId);
+        public ChannelMappingConfig GetWithSlackChannelId(string channelId);
     }
 }

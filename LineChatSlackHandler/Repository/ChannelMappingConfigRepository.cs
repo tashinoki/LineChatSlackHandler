@@ -29,7 +29,7 @@ namespace LineChatSlackHandler.Repository
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(botId))
                 throw new ArgumentException("");
 
-            var slackChannelId = _mappingConfigStorage.FirstOrDefault(x => x.Value.Equals(userId)).Key;
+            var slackChannelId = _mappingConfigStorage.FirstOrDefault(x => x.Value.Equals($"{botId}${userId}")).Key;
 
             if (slackChannelId is null)
                 throw new Exception("");
