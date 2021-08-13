@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LineChatSlackHandler.Entity;
+using Microsoft.Azure.Cosmos.Table;
 
 namespace LineChatSlackHandler.Repository
 {
@@ -13,6 +14,15 @@ namespace LineChatSlackHandler.Repository
         private static readonly Dictionary<string, string> _mappingConfigStorage = new Dictionary<string, string> {
             { "C02B6KW4K4G", "U57853f60cf6cbc8db966086785a9f591" }
         };
+
+        private readonly CloudTable _channelMappingConfigurationsTable;
+
+        public ChannelMappingConfigRepository()
+        {
+            var account = CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("TableStorage"));
+            var tableClient = account.CreateCloudTableClient();
+            _channelMappingConfigurationsTable = tableClient.GetTableReference("ChannelMappingConfigurations");
+        }
 
         public ChannelMappingConfig GetWithLineUserId(string userId, string botId)
         {
