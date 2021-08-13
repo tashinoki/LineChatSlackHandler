@@ -38,6 +38,7 @@ namespace LineChatSlackHandler.Repository
                 throw new ArgumentException("不正な Channel Id です");
 
             if (!_mappingConfigStorage.TryGetValue(channelId, out var lineUserId))
+            
                 throw new Exception("登録されていないチャンネル ID です");
 
             return new ChannelMappingConfig
