@@ -42,7 +42,7 @@ namespace LineChatSlackHandler
                 return new OkObjectResult(data.Challenge);
             }
 
-            var message =_messageFactory.Create(data.Event);
+            var message = await _messageFactory.CreateAsync(data.Event);
             await _lineChatService.SendMessageAsync(message);
             var user = data.Event.User;
 

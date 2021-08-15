@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading.Tasks;
 using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Repository;
 using Line.Messaging;
@@ -16,9 +16,9 @@ namespace LineChatSlackHandler.Factory
             _mappongConfiguRepository = channelMappingConfigRepository;
         }
 
-        public LineMessage Create(SlackEvent slackEvent)
+        public async Task<LineMessage> CreateAsync(SlackEvent slackEvent)
         {
-            var mappingConfig = _mappongConfiguRepository.GetWithSlackChannelId(slackEvent.Channel);
+            var mappingConfig = await _mappongConfiguRepository.GetWithSlackChannelIdAsync(slackEvent.Channel);
 
             switch(slackEvent.Subtype)
             {

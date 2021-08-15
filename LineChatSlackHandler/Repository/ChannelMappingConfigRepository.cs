@@ -9,14 +9,7 @@ using System.Net;
 namespace LineChatSlackHandler.Repository
 {
     public class ChannelMappingConfigRepository: IChannelMappingConfigRepository
-    {            
-        // { "SlackChannel" => "LineUserId" }
-        // Todo
-        // InMemoryかTableStorageに書き換える
-        private static readonly Dictionary<string, string> _mappingConfigStorage = new Dictionary<string, string> {
-            { "U84fcdf3e51332276d682851b85caf682$C02B6KW4K4G", "U57853f60cf6cbc8db966086785a9f591" }
-        };
-
+    {
         private readonly CloudTable _channelMappingConfigurationsTable;
 
         public ChannelMappingConfigRepository()
@@ -26,41 +19,63 @@ namespace LineChatSlackHandler.Repository
             _channelMappingConfigurationsTable = tableClient.GetTableReference("ChannelMappingConfigurations");
         }
 
-        public async Task<ChannelMappingConfig> GetWithLineUserId(string userId, string botId)
+        public async Task<ChannelMappingConfig> GetWithLineUserIdAsync(string userId, string botId)
         {
             if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(botId))
-                throw new ArgumentException("");
+                throw new ArgumentException("LineUserId もしくは LineBotId が空です");
 
 
             var operation = TableOperation.Retrieve<ChannelMappingConfig>(botId, userId);
-            var result =await _channelMappingConfigurationsTable.ExecuteAsync(operation);
 
-            if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
-                throw new Exception("チャンネルの設定が見つかりませんでした。");
+            try
+            {
+                var result = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
 
-            var config = result.Result as ChannelMappingConfig;
+                if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
+                    throw new Exception("チャンネルの設定が見つかりませんでした。");
 
-            if (config is null)
-                throw new Exception("");
+                var config = result.Result as ChannelMappingConfig;
 
-            return config;
+                if (config is null)
+                    throw new Exception("");
+
+                return config;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
 
-        public ChannelMappingConfig GetWithSlackChannelId(string channelId)
+        public async Task<ChannelMappingConfig> GetWithSlackChannelIdAsync(string channelId)
         {
             if (string.IsNullOrEmpty(channelId))
                 throw new ArgumentException("不正な Channel Id です");
 
-            if (!_mappingConfigStorage.TryGetValue(channelId, out var lineUserId))
-            
-                throw new Exception("登録されていないチャンネル ID です");
+            var query = new TableQuery<ChannelMappingConfig>().Where(
+                TableQuery.GenerateFilterCondition(nameof(ChannelMappingConfig.SlackChannelId), QueryComparisons.Equal, channelId));
+            var configs = new List<ChannelMappingConfig>();
 
-            return new ChannelMappingConfig
+            TableContinuationToken token = null;
+            try
             {
-                LineBotId = "",
-                LineUserId = lineUserId,
-                SlackChannelId = channelId,
-            };
+                do
+                {
+                    var querySegment = await _channelMappingConfigurationsTable.ExecuteQuerySegmentedAsync(query, token);
+                    configs.AddRange(querySegment.Results);
+
+                    if (querySegment.Count() > 1)
+                        throw new Exception("チャンネルが複数あります。");
+
+                    token = querySegment.ContinuationToken;
+                } while (token != null);
+
+                return configs.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.ToString());
+            }
         }
     }
 }

@@ -23,7 +23,7 @@ namespace LineChatSlackHandler.Factory
 
             foreach(var messageEvent in messageEvents)
             {
-                var mappingConfig = await _mappingConfigRepository.GetWithLineUserId(messageEvent.Source.UserId, lineBotId);
+                var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(messageEvent.Source.UserId, lineBotId);
                 var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
                 messages.Add(slackMessage);
             }

@@ -8,8 +8,8 @@ namespace LineChatSlackHandler.Repository
 {
     public interface IChannelMappingConfigRepository
     {
-        public Task<ChannelMappingConfig> GetWithLineUserId(string userId, string botId);
+        public Task<ChannelMappingConfig> GetWithLineUserIdAsync(string userId, string botId);
 
-        public ChannelMappingConfig GetWithSlackChannelId(string channelId);
+        public Task<ChannelMappingConfig> GetWithSlackChannelIdAsync(string channelId);
     }
 }
