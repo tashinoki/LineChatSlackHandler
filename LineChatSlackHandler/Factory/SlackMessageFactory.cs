@@ -4,6 +4,7 @@ using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Repository;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace LineChatSlackHandler.Factory
 {
@@ -16,13 +17,13 @@ namespace LineChatSlackHandler.Factory
             _mappingConfigRepository = channelMappingConfigRepository;
         }
 
-        public IReadOnlyList<SlackMessage> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents)
+        public async Task<IReadOnlyList<SlackMessage>> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents)
         {
             IList<SlackMessage> messages = new List<SlackMessage>();
 
             foreach(var messageEvent in messageEvents)
             {
-                var mappingConfig = _mappingConfigRepository.GetWithLineUserId(messageEvent.Source.UserId, lineBotId);
+                var mappingConfig = await _mappingConfigRepository.GetWithLineUserId(messageEvent.Source.UserId, lineBotId);
                 var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
                 messages.Add(slackMessage);
             }

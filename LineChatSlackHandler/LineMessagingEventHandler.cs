@@ -39,7 +39,7 @@ namespace LineChatSlackHandler
 
             (var destination, var messageEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
 
-            var slackMessages = _messageFactory.CreateSlackMessages(destination, messageEvents);
+            var slackMessages = await _messageFactory.CreateSlackMessages(destination, messageEvents);
 
             await _slackService.SendMessagesAsync(slackMessages);
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
