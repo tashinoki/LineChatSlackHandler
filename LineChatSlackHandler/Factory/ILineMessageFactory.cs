@@ -1,9 +1,10 @@
 ﻿using LineChatSlackHandler.Models;
+using System.Threading.Tasks;
 
 namespace LineChatSlackHandler.Factory
 {
     public interface ILineMessageFactory
     {
-        public LineMessage Create(SlackEvent slackEvent);
+        public Task<LineMessage> CreateAsync(SlackEvent slackEvent);
     }
 }
