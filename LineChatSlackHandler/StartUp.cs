@@ -18,6 +18,7 @@ namespace LineChatSlackHandler
             builder.Services.AddSingleton<ISlackMessageFactory, SlackMessageFactory>();
             builder.Services.AddSingleton<ILineMessageFactory, LineMessageFactory>();
             builder.Services.AddSingleton<IHandleLineWebhookService, HandleLineWebhookService>();
+            builder.Services.AddSingleton<ILineFollowService, LineFollowService>();
         }
 
         public void ConfigureServices(IServiceCollection services)
