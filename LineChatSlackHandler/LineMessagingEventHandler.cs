@@ -13,22 +13,11 @@ namespace LineChatSlackHandler
 {
     public class LineMessagingEventHandler
     {
+        private IHandleLineWebhookService _handleLineWebhookService;
 
-        private readonly IChannelMappingService _channelMappingService;
-        private readonly ILineChatService _lineChatService;
-        private readonly ISlackService _slackService;
-        private readonly ISlackMessageFactory _messageFactory;
-
-        public LineMessagingEventHandler(
-            IChannelMappingService channelMappingService,
-            ILineChatService lineChatService,
-            ISlackService slackService,
-            ISlackMessageFactory messageFactory)
+        public LineMessagingEventHandler(IHandleLineWebhookService handleLineWebhookService)
         {
-            _channelMappingService = channelMappingService;
-            _lineChatService = lineChatService;
-            _slackService = slackService;
-            _messageFactory = messageFactory;
+            _handleLineWebhookService = handleLineWebhookService;
         }
 
         [FunctionName("LineMessagingEventHandler")]
@@ -42,23 +31,7 @@ namespace LineChatSlackHandler
 
             foreach(var webhookEvent in webhookEvents)
             {
-                switch (webhookEvent.Type)
-                {
-                    case WebhookEventType.Follow:
-                        return;
-                    case WebhookEventType.Message:
-                        var messageEvent = webhookEvent as MessageEvent;
-
-                        if (messageEvent is null) throw new Exception("Line.Webhook.MessageEvent にキャストできませんでした。");
-                        var slackMessage = await _messageFactory.CreateSlackMessageAsync(destination, messageEvent);
-                        await _slackService.SendMessagesAsync(slackMessage);
-                        return;
-                    case WebhookEventType.Unfollow:
-                        Console.WriteLine("hello world");
-                        return;
-                    default:
-                        return;
-                }
+                await _handleLineWebhookService.HandleAsync(destination, webhookEvent);
             }
             return;
             //var slackMessages = await _messageFactory.CreateSlackMessages(destination, webhookEvents);

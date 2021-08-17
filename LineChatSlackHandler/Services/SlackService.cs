@@ -33,7 +33,6 @@ namespace LineChatSlackHandler.Services
         private async Task PostMessageAsync(SlackMessage slackMessage)
         {
             var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
-            var str = await response.Content.ReadAsStringAsync();
             var result = JsonConvert.DeserializeObject<SlackApiResponse>(await response.Content.ReadAsStringAsync());
 
             if (!result.Ok)
