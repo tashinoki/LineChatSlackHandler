@@ -52,8 +52,13 @@ namespace LineChatSlackHandler.Repository
             if (string.IsNullOrEmpty(channelId))
                 throw new ArgumentException("不正な Channel Id です");
 
-            var query = new TableQuery<ChannelMappingConfig>().Where(
-                TableQuery.GenerateFilterCondition(nameof(ChannelMappingConfig.SlackChannelId), QueryComparisons.Equal, channelId));
+            var query = new TableQuery<ChannelMappingConfig>()
+                .Where(
+                    TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterCondition(nameof(ChannelMappingConfig.SlackChannelId), QueryComparisons.Equal, channelId),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterConditionForBool(nameof(ChannelMappingConfig.IsDeleted), QueryComparisons.Equal, false)));
+            
             var configs = new List<ChannelMappingConfig>();
 
             TableContinuationToken token = null;
@@ -64,8 +69,9 @@ namespace LineChatSlackHandler.Repository
                     var querySegment = await _channelMappingConfigurationsTable.ExecuteQuerySegmentedAsync(query, token);
                     configs.AddRange(querySegment.Results);
 
-                    if (querySegment.Count() > 1)
-                        throw new Exception("チャンネルが複数あります。");
+                    var count = querySegment.Count();
+                    if (count > 1 || count == 0)
+                        throw new Exception("該当のチャンネルがありません。");
 
                     token = querySegment.ContinuationToken;
                 } while (token != null);
@@ -77,5 +83,8 @@ namespace LineChatSlackHandler.Repository
                 throw new Exception(e.ToString());
             }
         }
+
+        public async Task Create(string botId, string userId)
+        { }
     }
 }
