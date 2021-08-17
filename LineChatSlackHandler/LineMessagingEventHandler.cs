@@ -1,6 +1,7 @@
 using LineChatSlackHandler.Extensions;
 using LineChatSlackHandler.Factory;
 using LineChatSlackHandler.Services;
+using Line.Messaging.Webhooks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
@@ -37,11 +38,32 @@ namespace LineChatSlackHandler
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            (var destination, var messageEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
+            (var destination, var webhookEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
 
-            var slackMessages = _messageFactory.CreateSlackMessages(destination, messageEvents);
+            foreach(var webhookEvent in webhookEvents)
+            {
+                switch (webhookEvent.Type)
+                {
+                    case WebhookEventType.Follow:
+                        return;
+                    case WebhookEventType.Message:
+                        var messageEvent = webhookEvent as MessageEvent;
 
-            await _slackService.SendMessagesAsync(slackMessages);
+                        if (messageEvent is null) throw new Exception("Line.Webhook.MessageEvent にキャストできませんでした。");
+                        var slackMessage = await _messageFactory.CreateSlackMessageAsync(destination, messageEvent);
+                        await _slackService.SendMessagesAsync(slackMessage);
+                        return;
+                    case WebhookEventType.Unfollow:
+                        Console.WriteLine("hello world");
+                        return;
+                    default:
+                        return;
+                }
+            }
+            return;
+            //var slackMessages = await _messageFactory.CreateSlackMessages(destination, webhookEvents);
+
+            //await _slackService.SendMessagesAsync(slackMessages);
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
             //try
             //{

@@ -7,6 +7,6 @@ namespace LineChatSlackHandler.Services
 {
     public interface ISlackService
     {
-        public Task SendMessagesAsync(IReadOnlyList<SlackMessage> slackMessages);
+        public Task SendMessagesAsync(SlackMessage slackMessage);
     }
 }

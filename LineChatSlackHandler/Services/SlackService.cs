@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace LineChatSlackHandler.Services
 {
@@ -24,17 +25,19 @@ namespace LineChatSlackHandler.Services
             _channelMappingService = channelMappingService;
         }
 
-        public async Task SendMessagesAsync(IReadOnlyList<SlackMessage> messages)
+        public async Task SendMessagesAsync(SlackMessage message)
         {
-            foreach (var message in messages)
-            {
-                await PostMessageAsync(message);
-            }
+            await PostMessageAsync(message);
         }
 
         private async Task PostMessageAsync(SlackMessage slackMessage)
         {
             var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
+            var str = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<SlackApiResponse>(await response.Content.ReadAsStringAsync());
+
+            if (!result.Ok)
+                throw new Exception(result.Error);
         }
     }
 }

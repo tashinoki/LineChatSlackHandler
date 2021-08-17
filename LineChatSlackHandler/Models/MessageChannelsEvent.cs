@@ -49,4 +49,12 @@ namespace LineChatSlackHandler.Models
         Text,
         FileShare
     }
+
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    internal class SlackApiResponse
+    {
+        public bool Ok { get; set; }
+
+        public string Error { get; set; }
+    }
 }

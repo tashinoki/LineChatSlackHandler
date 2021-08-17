@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineChatSlackHandler", "LineChatSlackHandler.csproj", "{DA080B01-5B69-4F29-A9F1-FD956426261C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineChatSlackHandler.Test", "..\LineChatHandler.Test\LineChatSlackHandler.Test.csproj", "{710F3FD7-C420-4B72-AC0F-E9E386455986}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LineChatSlackHandler.Test", "..\LineChatHandler.Test\LineChatSlackHandler.Test.csproj", "{710F3FD7-C420-4B72-AC0F-E9E386455986}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
