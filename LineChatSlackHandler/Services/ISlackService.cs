@@ -8,5 +8,7 @@ namespace LineChatSlackHandler.Services
     public interface ISlackService
     {
         public Task SendMessagesAsync(SlackMessage slackMessage);
+
+        public Task<string> CreateChannelAsync(string name);
     }
 }

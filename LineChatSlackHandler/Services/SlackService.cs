@@ -38,5 +38,16 @@ namespace LineChatSlackHandler.Services
             if (!result.Ok)
                 throw new Exception(result.Error);
         }
+
+        public async Task<string> CreateChannelAsync(string name)
+        {
+            var response = await _httpClient.PostAsJsonAsync("conversations.create", new { name  = name });
+            var result = JsonConvert.DeserializeObject<SlackApiResponse>(await response.Content.ReadAsStringAsync());
+
+            if (!result.Ok)
+                throw new Exception(result.Error);
+
+            return result.Error;
+        }
     }
 }
