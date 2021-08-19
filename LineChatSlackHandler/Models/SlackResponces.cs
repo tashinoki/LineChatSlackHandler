@@ -22,7 +22,7 @@ namespace LineChatSlackHandler.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class SlackEvent
+    internal class SlackEvent
     {
         public string Message { get; set; }
 
@@ -51,10 +51,28 @@ namespace LineChatSlackHandler.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class SlackApiResponse
+    public class ApiResponse
     {
         public bool Ok { get; set; }
 
         public string? Error { get; set; }
+    }
+
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class ConversationList: ApiResponse
+    {
+        public IEnumerable<Channel> Channels { get; set; }
+    }
+
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class Channel
+    {
+        public string Name { get; set; }
+
+        public bool IsMember { get; set; }
+
+        public bool IsChannel { get; set; }
+
+        public bool IsArchived { get; set; }
     }
 }

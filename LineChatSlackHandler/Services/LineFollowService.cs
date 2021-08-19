@@ -21,7 +21,7 @@ namespace LineChatSlackHandler.Services
 
         public async Task<LineWebhookHandleResult> MakeChannelMappingConfigAsync(string botId, FollowEvent followEvent)
         {
-            var slackChannelId = await _slackService.CreateChannelAsync(followEvent.Source.UserId);
+            var slackChannelId = await _slackService.CreateChannelAsync(followEvent.Source.UserId.ToLower());
             return new LineWebhookHandleResult { };
         }
     }

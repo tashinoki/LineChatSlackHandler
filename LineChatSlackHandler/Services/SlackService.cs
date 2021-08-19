@@ -10,7 +10,6 @@ namespace LineChatSlackHandler.Services
 {
     public class SlackService: ISlackService
     {
-        private readonly IChannelMappingService _channelMappingService;
         private static readonly HttpClient _httpClient = new HttpClient
         {
             BaseAddress = new Uri("https://slack.com/api/"),
@@ -20,11 +19,6 @@ namespace LineChatSlackHandler.Services
             }
         };
 
-        public SlackService(IChannelMappingService channelMappingService)
-        {
-            _channelMappingService = channelMappingService;
-        }
-
         public async Task SendMessagesAsync(SlackMessage message)
         {
             await PostMessageAsync(message);
@@ -32,8 +26,9 @@ namespace LineChatSlackHandler.Services
 
         private async Task PostMessageAsync(SlackMessage slackMessage)
         {
+            slackMessage.Channel = "C02BQJV83SP";
             var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
-            var result = JsonConvert.DeserializeObject<SlackApiResponse>(await response.Content.ReadAsStringAsync());
+            var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
 
             if (!result.Ok)
                 throw new Exception(result.Error);
@@ -41,8 +36,11 @@ namespace LineChatSlackHandler.Services
 
         public async Task<string> CreateChannelAsync(string name)
         {
-            var response = await _httpClient.PostAsJsonAsync("conversations.create", new { name  = name });
-            var result = JsonConvert.DeserializeObject<SlackApiResponse>(await response.Content.ReadAsStringAsync());
+            var response = await _httpClient.PostAsJsonAsync("conversations.create", new Dictionary<string, string>
+            {
+                { "name", name }
+            });
+            var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
 
             if (!result.Ok)
                 throw new Exception(result.Error);
