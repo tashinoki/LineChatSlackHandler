@@ -22,7 +22,7 @@ namespace LineChatSlackHandler.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    internal class SlackEvent
+    public class SlackEvent
     {
         public string Message { get; set; }
 

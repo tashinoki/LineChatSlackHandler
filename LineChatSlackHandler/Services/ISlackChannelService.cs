@@ -7,6 +7,6 @@ namespace LineChatSlackHandler.Services
 {
     public interface ISlackChannelService
     {
-        public Task<IEnumerable<string>> StartConversationAsync();
+        public Task<IEnumerable<string>> StartConversationAsync(string channelId);
     }
 }
