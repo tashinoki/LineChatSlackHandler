@@ -11,17 +11,24 @@ namespace LineChatSlackHandler.Services
     public class LineFollowService: ILineFollowService
     {
         private IChannelMappingConfigRepository _mappingConfigRepository;
-        private ISlackService _slackService;
+        private ISlackChannelService _slackChannelService;
 
-        public LineFollowService(IChannelMappingConfigRepository mappingConfigRepository, ISlackService slackService)
+        public LineFollowService(IChannelMappingConfigRepository mappingConfigRepository, ISlackChannelService slackChannelService)
         {
             _mappingConfigRepository = mappingConfigRepository;
-            _slackService = slackService;
+            _slackChannelService = slackChannelService;
         }
 
         public async Task<LineWebhookHandleResult> MakeChannelMappingConfigAsync(string botId, FollowEvent followEvent)
         {
-            var slackChannelId = await _slackService.CreateChannelAsync(followEvent.Source.UserId.ToLower());
+            var lineUserId = followEvent.Source.UserId;
+            var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(botId, lineUserId);
+
+            if (mappingConfig is null)
+            {
+                var slackChannel = await _slackChannelService.StartConversationAsync(lineUserId);
+                _mappingConfigRepository.Create(botId, lineUserId, slackChannel.Id);
+            }
             return new LineWebhookHandleResult { };
         }
     }

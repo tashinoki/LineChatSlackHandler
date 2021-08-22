@@ -4,7 +4,6 @@ using System.Linq;
 using LineChatSlackHandler.Entity;
 using Microsoft.Azure.Cosmos.Table;
 using System.Threading.Tasks;
-using System.Net;
 
 namespace LineChatSlackHandler.Repository
 {
@@ -31,7 +30,10 @@ namespace LineChatSlackHandler.Repository
             {
                 var result = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
 
-                if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
+                if (result.HttpStatusCode == 404)
+                    return null;
+
+                else if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
                     throw new Exception("チャンネルの設定が見つかりませんでした。");
 
                 var config = result.Result as ChannelMappingConfig;
@@ -84,7 +86,20 @@ namespace LineChatSlackHandler.Repository
             }
         }
 
-        public async Task Create(string botId, string userId)
-        { }
+        public async Task Create(string botId, string lineUserId, string slackChannelId)
+        {
+            var mappingConfig = new ChannelMappingConfig
+            {
+                PartitionKey = botId,
+                RowKey = lineUserId,
+                LineBotId = botId,
+                LineUserId = lineUserId,
+                SlackChannelId = slackChannelId,
+                IsDeleted = false
+            };
+
+            var operation = TableOperation.InsertOrMerge(mappingConfig);
+            var response = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
+        }
     }
 }

@@ -12,6 +12,6 @@ namespace LineChatSlackHandler.Repository
 
         public Task<ChannelMappingConfig> GetWithSlackChannelIdAsync(string channelId);
 
-        public Task Create(string botId, string userId);
+        public Task Create(string botId, string lineUserId, string slackChanneld);
     }
 }

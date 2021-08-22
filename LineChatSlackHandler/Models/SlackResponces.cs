@@ -59,14 +59,21 @@ namespace LineChatSlackHandler.Models
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class ConversationList: ApiResponse
+    public class ConversationListResponse: ApiResponse
     {
         public IEnumerable<Channel> Channels { get; set; }
+    }
+
+    public class ConversationCreateResponse: ApiResponse
+    {
+        public Channel Channel { get; set; }
     }
 
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
     public class Channel
     {
+        public string Id { get; set; }
+
         public string Name { get; set; }
 
         public bool IsMember { get; set; }

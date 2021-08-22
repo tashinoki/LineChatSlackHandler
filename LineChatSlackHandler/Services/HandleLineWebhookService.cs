@@ -24,7 +24,7 @@ namespace LineChatSlackHandler.Services
             _messageFactory = messageFactory;
         }
 
-        public async Task<LineWebhookHandleResult> HandleAsync(string botId, WebhookEvent webhook)
+        public async Task HandleAsync(string botId, WebhookEvent webhook)
         {
             switch(webhook.Type)
             {
@@ -36,7 +36,8 @@ namespace LineChatSlackHandler.Services
 
                     var slackMessage = await _messageFactory.CreateSlackMessageAsync(botId, messageEvent);
                     await _slackService.SendMessagesAsync(slackMessage);
-                    return new LineWebhookHandleResult { };
+                    new LineWebhookHandleResult { };
+                    return;
 
                 case WebhookEventType.Follow:
                     var followEvent = webhook as FollowEvent;
@@ -44,13 +45,13 @@ namespace LineChatSlackHandler.Services
                     if (followEvent is null)
                         throw new Exception("Line.Webhook.FollowEvent にキャストできませんでした。");
 
-                    return await _lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
+                    await _lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
+                    return;
 
                 default:
-                    return new LineWebhookHandleResult { };
+                    throw new Exception("");
 
             }
-            return new LineWebhookHandleResult{ };
         }
     }
 }

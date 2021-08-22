@@ -24,10 +24,22 @@ namespace LineChatSlackHandler.Services
         {
             var response = await _httpClient.GetAsync("conversations.list");
 
-            var data = JsonConvert.DeserializeObject<ConversationList>(await response.Content.ReadAsStringAsync());
+            var data = JsonConvert.DeserializeObject<ConversationListResponse>(await response.Content.ReadAsStringAsync());
 
             if (data.Ok)
                 return data.Channels;
+
+            else
+                throw new Exception(data.Error);
+        }
+
+        public async Task<Channel> CreateChannelAsync(string name)
+        {
+            var response = await _httpClient.PostAsJsonAsync("conversations.create", new { name = name });
+            var data = JsonConvert.DeserializeObject<ConversationCreateResponse>(await response.Content.ReadAsStringAsync());
+
+            if (data.Ok)
+                return data.Channel;
 
             else
                 throw new Exception(data.Error);
