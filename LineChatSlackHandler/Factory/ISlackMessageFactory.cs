@@ -9,6 +9,6 @@ namespace LineChatSlackHandler.Factory
 {
     public interface ISlackMessageFactory
     {
-        public Task<IReadOnlyList<SlackMessage>> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents);
+        public Task<SlackMessage> CreateSlackMessageAsync(string lineBotId, MessageEvent messageEvent);
     }
 }

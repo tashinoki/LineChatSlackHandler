@@ -4,7 +4,6 @@ using System.Linq;
 using LineChatSlackHandler.Entity;
 using Microsoft.Azure.Cosmos.Table;
 using System.Threading.Tasks;
-using System.Net;
 
 namespace LineChatSlackHandler.Repository
 {
@@ -31,7 +30,10 @@ namespace LineChatSlackHandler.Repository
             {
                 var result = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
 
-                if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
+                if (result.HttpStatusCode == 404)
+                    return null;
+
+                else if (result.HttpStatusCode >= 400 && result.HttpStatusCode <= 500)
                     throw new Exception("チャンネルの設定が見つかりませんでした。");
 
                 var config = result.Result as ChannelMappingConfig;
@@ -52,8 +54,13 @@ namespace LineChatSlackHandler.Repository
             if (string.IsNullOrEmpty(channelId))
                 throw new ArgumentException("不正な Channel Id です");
 
-            var query = new TableQuery<ChannelMappingConfig>().Where(
-                TableQuery.GenerateFilterCondition(nameof(ChannelMappingConfig.SlackChannelId), QueryComparisons.Equal, channelId));
+            var query = new TableQuery<ChannelMappingConfig>()
+                .Where(
+                    TableQuery.CombineFilters(
+                        TableQuery.GenerateFilterCondition(nameof(ChannelMappingConfig.SlackChannelId), QueryComparisons.Equal, channelId),
+                        TableOperators.And,
+                        TableQuery.GenerateFilterConditionForBool(nameof(ChannelMappingConfig.IsDeleted), QueryComparisons.Equal, false)));
+            
             var configs = new List<ChannelMappingConfig>();
 
             TableContinuationToken token = null;
@@ -64,8 +71,9 @@ namespace LineChatSlackHandler.Repository
                     var querySegment = await _channelMappingConfigurationsTable.ExecuteQuerySegmentedAsync(query, token);
                     configs.AddRange(querySegment.Results);
 
-                    if (querySegment.Count() > 1)
-                        throw new Exception("チャンネルが複数あります。");
+                    var count = querySegment.Count();
+                    if (count > 1 || count == 0)
+                        throw new Exception("該当のチャンネルがありません。");
 
                     token = querySegment.ContinuationToken;
                 } while (token != null);
@@ -76,6 +84,22 @@ namespace LineChatSlackHandler.Repository
             {
                 throw new Exception(e.ToString());
             }
+        }
+
+        public async Task Create(string botId, string lineUserId, string slackChannelId)
+        {
+            var mappingConfig = new ChannelMappingConfig
+            {
+                PartitionKey = botId,
+                RowKey = lineUserId,
+                LineBotId = botId,
+                LineUserId = lineUserId,
+                SlackChannelId = slackChannelId,
+                IsDeleted = false
+            };
+
+            var operation = TableOperation.InsertOrMerge(mappingConfig);
+            var response = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
         }
     }
 }

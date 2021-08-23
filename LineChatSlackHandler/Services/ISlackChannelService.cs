@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using LineChatSlackHandler.Models;
 
 namespace LineChatSlackHandler.Services
 {
-    public interface ISlackService
+    public interface ISlackChannelService
     {
-        public Task SendMessagesAsync(SlackMessage slackMessage);
-
-        public Task<string> CreateChannelAsync(string name);
+        public Task<Channel> StartConversationAsync(string lineUserId);
     }
 }

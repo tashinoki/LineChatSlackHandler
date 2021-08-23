@@ -12,7 +12,7 @@ namespace LineChatSlackHandler.Extensions
 {
     public static class WebhookRequestMessageHelper
     {
-        public static async Task<(string, IReadOnlyList<MessageEvent>)> GetMessageEventsAsync(this HttpRequestMessage req, string channelSecret)
+        public static async Task<(string, IEnumerable<WebhookEvent>)> GetMessageEventsAsync(this HttpRequestMessage req, string channelSecret)
         {
             if (req is null)
                 throw new ArgumentException(nameof(req));
@@ -40,8 +40,7 @@ namespace LineChatSlackHandler.Extensions
                 throw new ArgumentNullException("Bot User Idが NULL です。");
 
             var webhookEvents = WebhookEventParser.ParseEvents(data?.events) as IEnumerable<WebhookEvent>;
-            var eventMessages = webhookEvents.Select(webhookEvent => webhookEvent as MessageEvent);
-            return (botId, eventMessages.ToList().AsReadOnly());
+            return (botId, webhookEvents);
 
             bool VerifySignature(string secret, string signature, string content)
             {

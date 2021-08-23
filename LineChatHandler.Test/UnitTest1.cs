@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace LineChatSlackHandler.Tetst
+namespace LineChatHandler.Test
 {
     public class Tests
     {

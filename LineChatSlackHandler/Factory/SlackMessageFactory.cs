@@ -17,17 +17,12 @@ namespace LineChatSlackHandler.Factory
             _mappingConfigRepository = channelMappingConfigRepository;
         }
 
-        public async Task<IReadOnlyList<SlackMessage>> CreateSlackMessages(string lineBotId, IEnumerable<MessageEvent> messageEvents)
+        public async Task<SlackMessage> CreateSlackMessageAsync(string lineBotId, MessageEvent messageEvent)
         {
-            IList<SlackMessage> messages = new List<SlackMessage>();
+            var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(messageEvent.Source.UserId, lineBotId);
+            var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
 
-            foreach(var messageEvent in messageEvents)
-            {
-                var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(messageEvent.Source.UserId, lineBotId);
-                var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
-                messages.Add(slackMessage);
-            }
-            return messages as IReadOnlyList<SlackMessage>;
+            return slackMessage;
         }
 
         private SlackMessage CreateSlackMessage(ChannelMappingConfig mappingConfig, MessageEvent messageEvent)

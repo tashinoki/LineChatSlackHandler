@@ -1,6 +1,7 @@
-using LineChatSlackHandler.Extensions;
+ï»¿using LineChatSlackHandler.Extensions;
 using LineChatSlackHandler.Factory;
 using LineChatSlackHandler.Services;
+using Line.Messaging.Webhooks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
@@ -12,22 +13,11 @@ namespace LineChatSlackHandler
 {
     public class LineMessagingEventHandler
     {
+        private IHandleLineWebhookService _handleLineWebhookService;
 
-        private readonly IChannelMappingService _channelMappingService;
-        private readonly ILineChatService _lineChatService;
-        private readonly ISlackService _slackService;
-        private readonly ISlackMessageFactory _messageFactory;
-
-        public LineMessagingEventHandler(
-            IChannelMappingService channelMappingService,
-            ILineChatService lineChatService,
-            ISlackService slackService,
-            ISlackMessageFactory messageFactory)
+        public LineMessagingEventHandler(IHandleLineWebhookService handleLineWebhookService)
         {
-            _channelMappingService = channelMappingService;
-            _lineChatService = lineChatService;
-            _slackService = slackService;
-            _messageFactory = messageFactory;
+            _handleLineWebhookService = handleLineWebhookService;
         }
 
         [FunctionName("LineMessagingEventHandler")]
@@ -37,15 +27,20 @@ namespace LineChatSlackHandler
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            (var destination, var messageEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
+            (var destination, var webhookEvents) = await req.GetMessageEventsAsync(Environment.GetEnvironmentVariable("LineSecretToken"));
 
-            var slackMessages = await _messageFactory.CreateSlackMessages(destination, messageEvents);
+            foreach(var webhookEvent in webhookEvents)
+            {
+                _handleLineWebhookService.HandleAsync(destination, webhookEvent);
+            }
+            return;
+            //var slackMessages = await _messageFactory.CreateSlackMessages(destination, webhookEvents);
 
-            await _slackService.SendMessagesAsync(slackMessages);
+            //await _slackService.SendMessagesAsync(slackMessages);
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
             //try
             //{
-            //    await lineMessagingClient.PushMessageAsync("U57853f60cf6cbc8db966086785a9f591", new List<ISendMessage> { new TextMessage("‚±‚ñ‚É‚¿‚Í") });
+            //    await lineMessagingClient.PushMessageAsync("U57853f60cf6cbc8db966086785a9f591", new List<ISendMessage> { new TextMessage("ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½") });
             //}
             //catch (Exception e)
             //{

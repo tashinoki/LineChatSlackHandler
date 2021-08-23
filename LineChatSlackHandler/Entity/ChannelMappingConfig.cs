@@ -12,5 +12,7 @@ namespace LineChatSlackHandler.Entity
         public string LineUserId { get; set; }
 
         public string LineBotId { get; set; }
+
+        public bool IsDeleted { get; set; }
     }
 }
