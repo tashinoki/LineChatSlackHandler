@@ -1,4 +1,4 @@
-using LineChatSlackHandler.Extensions;
+ï»¿using LineChatSlackHandler.Extensions;
 using LineChatSlackHandler.Factory;
 using LineChatSlackHandler.Services;
 using Line.Messaging.Webhooks;
@@ -40,7 +40,7 @@ namespace LineChatSlackHandler
             //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
             //try
             //{
-            //    await lineMessagingClient.PushMessageAsync("U57853f60cf6cbc8db966086785a9f591", new List<ISendMessage> { new TextMessage("‚±‚ñ‚É‚¿‚Í") });
+            //    await lineMessagingClient.PushMessageAsync("U57853f60cf6cbc8db966086785a9f591", new List<ISendMessage> { new TextMessage("ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½") });
             //}
             //catch (Exception e)
             //{
