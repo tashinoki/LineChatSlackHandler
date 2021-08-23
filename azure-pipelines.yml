@@ -8,7 +8,7 @@ trigger:
 
 variables:
   # Azure Resource Manager connection created during pipeline creation
-  azureSubscription: '80ae5b7a-bfe5-4047-ac63-b76b6a1fe8d0'
+  azureSubscription: '60753949-5f58-41ae-b91a-148d9e0e7ea0'
 
   # Function app name
   functionAppName: 'LineHooks'
