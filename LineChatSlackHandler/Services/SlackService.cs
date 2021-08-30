@@ -30,6 +30,7 @@ namespace LineChatSlackHandler.Services
                 case SlackMessageType.File:
                     var fileMessage = message as SlackFileMessage;
                     return UploadFileAsync(fileMessage);
+
                 default:
                     throw new Exception("");
             }

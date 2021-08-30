@@ -1,16 +1,19 @@
 ﻿using Line.Messaging.Webhooks;
+using Line.Messaging;
 using LineChatSlackHandler.Entity;
 using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Repository;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.IO;
+using System.Net.Http;
 
 namespace LineChatSlackHandler.Factory
 {
     public class SlackMessageFactory: ISlackMessageFactory
     {
         private readonly IChannelMappingConfigRepository _mappingConfigRepository;
+        private readonly HttpClient _httpClient = new HttpClient();
 
         public SlackMessageFactory(IChannelMappingConfigRepository channelMappingConfigRepository)
         {
@@ -20,12 +23,12 @@ namespace LineChatSlackHandler.Factory
         public async Task<SlackMessage> CreateSlackMessageAsync(string lineBotId, MessageEvent messageEvent)
         {
             var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(messageEvent.Source.UserId, lineBotId);
-            var slackMessage = CreateSlackMessage(mappingConfig, messageEvent);
+            var slackMessage = await CreateSlackMessageAsync(mappingConfig, messageEvent);
 
             return slackMessage;
         }
 
-        private SlackMessage CreateSlackMessage(ChannelMappingConfig mappingConfig, MessageEvent messageEvent)
+        private async ValueTask<SlackMessage> CreateSlackMessageAsync(ChannelMappingConfig mappingConfig, MessageEvent messageEvent)
         {
             switch(messageEvent.Message.Type)
             {
@@ -34,6 +37,16 @@ namespace LineChatSlackHandler.Factory
                     return new SlackTextMessage {
                         Channel = mappingConfig.SlackChannelId,
                         Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text)
+                    };
+
+                case EventMessageType.Image:
+                    var imageMessage = messageEvent.Message as MediaEventMessage;
+                    var fileUrl =  imageMessage.ContentProvider.OriginalContentUrl;
+                    var response = await _httpClient.GetAsync(fileUrl);
+                    return new SlackFileMessage
+                    {
+                        Channel = mappingConfig.SlackChannelId,
+                        File = await response.Content.ReadAsStreamAsync()
                     };
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");
