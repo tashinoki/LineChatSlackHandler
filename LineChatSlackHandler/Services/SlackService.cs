@@ -21,16 +21,26 @@ namespace LineChatSlackHandler.Services
 
         public async Task SendMessagesAsync(SlackMessage message)
         {
-            await PostMessageAsync(message);
+            switch(message.Type)
+            {
+                case SlackMessageType.Text:
+                    var textMessage = message as SlackTextMessage;
+                    await PostMessageAsync(textMessage);
+                    return;
+            }
         }
 
-        private async Task PostMessageAsync(SlackMessage slackMessage)
+        private async Task PostMessageAsync(SlackTextMessage slackMessage)
         {
             var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
             var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
 
             if (!result.Ok)
                 throw new Exception(result.Error);
+        }
+
+        private async Task UploadFileAsync()
+        {
         }
 
         public async Task<string> CreateChannelAsync(string name)

@@ -31,7 +31,7 @@ namespace LineChatSlackHandler.Factory
             {
                 case EventMessageType.Text:
 
-                    return new SlackMessage {
+                    return new SlackTextMessage {
                         Channel = mappingConfig.SlackChannelId,
                         Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text)
                     };

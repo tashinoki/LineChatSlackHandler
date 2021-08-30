@@ -4,19 +4,34 @@ using System.IO;
 
 namespace LineChatSlackHandler.Models
 {
+
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class SlackMessage
+    public abstract class SlackMessage
     {
         public string Channel { get; set; }
 
+        public SlackMessageType Type { get; set; }
+    }
+
+
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class SlackTextMessage: SlackMessage
+    {
         public string Text { get; set; }
     }
 
+
     [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
-    public class SlackFileMessage
+    public class SlackFileMessage: SlackMessage
     {
-        public string Channel { get; set; }
 
         public Stream File { get; set; }
+    }
+
+
+    public enum SlackMessageType
+    {
+        Text,
+        File
     }
 }
