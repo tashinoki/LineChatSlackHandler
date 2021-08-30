@@ -36,7 +36,6 @@ namespace LineChatSlackHandler.Services
 
                     var slackMessage = await _messageFactory.CreateSlackMessageAsync(botId, messageEvent);
                     await _slackService.SendMessagesAsync(slackMessage);
-                    new LineWebhookHandleResult { };
                     return;
 
                 case WebhookEventType.Follow:

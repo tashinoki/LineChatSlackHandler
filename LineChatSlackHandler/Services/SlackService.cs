@@ -19,14 +19,15 @@ namespace LineChatSlackHandler.Services
             }
         };
 
-        public async Task SendMessagesAsync(SlackMessage message)
+        public Task SendMessagesAsync(SlackMessage message)
         {
             switch(message.Type)
             {
                 case SlackMessageType.Text:
                     var textMessage = message as SlackTextMessage;
-                    await PostMessageAsync(textMessage);
-                    return;
+                    return PostMessageAsync(textMessage);
+                default:
+                    throw new Exception("");
             }
         }
 
