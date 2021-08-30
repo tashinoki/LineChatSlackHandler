@@ -26,6 +26,10 @@ namespace LineChatSlackHandler.Services
                 case SlackMessageType.Text:
                     var textMessage = message as SlackTextMessage;
                     return PostMessageAsync(textMessage);
+
+                case SlackMessageType.File:
+                    var fileMessage = message as SlackFileMessage;
+                    return UploadFileAsync(fileMessage);
                 default:
                     throw new Exception("");
             }
@@ -40,7 +44,7 @@ namespace LineChatSlackHandler.Services
                 throw new Exception(result.Error);
         }
 
-        private async Task UploadFileAsync()
+        private async Task UploadFileAsync(SlackFileMessage message)
         {
         }
 
