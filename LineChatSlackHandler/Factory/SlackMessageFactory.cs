@@ -7,13 +7,20 @@ using System;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace LineChatSlackHandler.Factory
 {
     public class SlackMessageFactory: ISlackMessageFactory
     {
         private readonly IChannelMappingConfigRepository _mappingConfigRepository;
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly static HttpClient _httpClient = new HttpClient
+        {
+            DefaultRequestHeaders =
+            {
+                Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("LineAccessToken"))
+            }
+        };
 
         public SlackMessageFactory(IChannelMappingConfigRepository channelMappingConfigRepository)
         {
@@ -42,10 +49,9 @@ namespace LineChatSlackHandler.Factory
 
                 case EventMessageType.Image:
                     var imageMessage = messageEvent.Message as MediaEventMessage;
-                    var fileUrl = $"https://api-data.line.me/v2/bot/message/{imageMessage.Id}/content";
                     try
                     {
-                        var response = await _httpClient.GetAsync(fileUrl);
+                        var response = await _httpClient.GetAsync($"https://api-data.line.me/v2/bot/message/{imageMessage.Id}/content");
                         return new SlackFileMessage
                         {
                             Channel = mappingConfig.SlackChannelId,
