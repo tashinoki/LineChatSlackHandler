@@ -36,18 +36,28 @@ namespace LineChatSlackHandler.Factory
 
                     return new SlackTextMessage {
                         Channel = mappingConfig.SlackChannelId,
-                        Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text)
+                        Text = AttatchMention((messageEvent.Message as TextEventMessage)?.Text),
+                        Type = SlackMessageType.Text
                     };
 
                 case EventMessageType.Image:
                     var imageMessage = messageEvent.Message as MediaEventMessage;
-                    var fileUrl =  imageMessage.ContentProvider.OriginalContentUrl;
-                    var response = await _httpClient.GetAsync(fileUrl);
-                    return new SlackFileMessage
+                    var fileUrl = $"https://api-data.line.me/v2/bot/message/{imageMessage.Id}/content";
+                    try
                     {
-                        Channel = mappingConfig.SlackChannelId,
-                        File = await response.Content.ReadAsStreamAsync()
-                    };
+                        var response = await _httpClient.GetAsync(fileUrl);
+                        return new SlackFileMessage
+                        {
+                            Channel = mappingConfig.SlackChannelId,
+                            File = await response.Content.ReadAsStreamAsync(),
+                            Type = SlackMessageType.File
+                        };
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception(e.ToString());
+                    }
+                    
                 default:
                     throw new Exception($"無効なLine Webhook Event {messageEvent.Message.Type} が指定されました。");
             }
