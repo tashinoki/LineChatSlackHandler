@@ -37,6 +37,9 @@ namespace LineChatSlackHandler
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var data = JsonConvert.DeserializeObject<MessageChannelsEvent>(requestBody);
 
+            if (data.Event.BotProfile != null)
+                return new OkObjectResult("");
+
             if (!string.IsNullOrEmpty(data.Challenge))
             {
                 return new OkObjectResult(data.Challenge);
@@ -44,8 +47,6 @@ namespace LineChatSlackHandler
 
             var message = await _messageFactory.CreateAsync(data.Event);
             await _lineChatService.SendMessageAsync(message);
-            var user = data.Event.User;
-
             return new OkObjectResult(data.Token);
         }
     }

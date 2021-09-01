@@ -47,20 +47,17 @@ namespace LineChatSlackHandler.Services
 
         private async Task UploadFileAsync(SlackFileMessage message)
         {
-            try
+            using var content = new MultipartFormDataContent
             {
-                using var content = new MultipartFormDataContent
-                {
-                    { new StreamContent(message.File), "file", "image" },
-                    { new StringContent(message.Channel), "channels" },
-                    { new StringContent("jpg"), "filetype" }
-                };
-                var response = await _httpClient.PostAsync("files.upload", content);
-            }
-            catch (Exception e)
-            {
+                { new StreamContent(message.File), "file", "image" },
+                { new StringContent(message.Channel), "channels" },
+                { new StringContent("jpg"), "filetype" }
+            };
+            var response = await _httpClient.PostAsync("files.upload", content);
+            var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
 
-            }
+            if (!result.Ok)
+                throw new Exception(result.Error);
         }
 
         public async Task<string> CreateChannelAsync(string name)
