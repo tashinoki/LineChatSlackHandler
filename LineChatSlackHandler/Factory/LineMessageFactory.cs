@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using LineChatSlackHandler.Models;
 using LineChatSlackHandler.Repository;
 using Line.Messaging;
+using LineChatSlackHandler.Services;
 
 namespace LineChatSlackHandler.Factory
 {

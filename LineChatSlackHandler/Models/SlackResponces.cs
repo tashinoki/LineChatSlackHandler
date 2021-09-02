@@ -41,6 +41,20 @@ namespace LineChatSlackHandler.Models
         public string Type { get; set; }
 
         public SlackEventSubType Subtype { get; set; }
+
+        public BotProfile BotProfile { get; set; }
+    }
+
+    [JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+    public class BotProfile
+    {
+        public string Id { get; set; }
+
+        public bool Deleted { get; set; }
+
+        public string Name { get; set; }
+
+        public string TeamId { get; set; }
     }
 
     [JsonConverter(typeof(StringEnumConverter), typeof(SnakeCaseNamingStrategy))]

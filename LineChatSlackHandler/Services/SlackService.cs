@@ -19,14 +19,41 @@ namespace LineChatSlackHandler.Services
             }
         };
 
-        public async Task SendMessagesAsync(SlackMessage message)
+        public Task SendMessagesAsync(SlackMessage message)
         {
-            await PostMessageAsync(message);
+            switch(message.Type)
+            {
+                case SlackMessageType.Text:
+                    var textMessage = message as SlackTextMessage;
+                    return PostMessageAsync(textMessage);
+
+                case SlackMessageType.File:
+                    var fileMessage = message as SlackFileMessage;
+                    return UploadFileAsync(fileMessage);
+
+                default:
+                    throw new Exception("");
+            }
         }
 
-        private async Task PostMessageAsync(SlackMessage slackMessage)
+        private async Task PostMessageAsync(SlackTextMessage slackMessage)
         {
             var response = await _httpClient.PostAsJsonAsync("chat.postMessage", slackMessage);
+            var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
+
+            if (!result.Ok)
+                throw new Exception(result.Error);
+        }
+
+        private async Task UploadFileAsync(SlackFileMessage message)
+        {
+            using var content = new MultipartFormDataContent
+            {
+                { new StreamContent(message.File), "file", "image" },
+                { new StringContent(message.Channel), "channels" },
+                { new StringContent("jpg"), "filetype" }
+            };
+            var response = await _httpClient.PostAsync("files.upload", content);
             var result = JsonConvert.DeserializeObject<ApiResponse>(await response.Content.ReadAsStringAsync());
 
             if (!result.Ok)
