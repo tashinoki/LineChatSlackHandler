@@ -45,6 +45,12 @@ namespace LineChatHandler.Test
             
             // assert
             Assert.That(lineMessage.Message.Type, Is.EqualTo(MessageType.Text));
+            Assert.That(lineMessage.ToUserId, Is.EqualTo(lineUseId));
+
+            var lineTextMessage = lineMessage.Message as TextMessage;
+
+            Assert.That(lineTextMessage, Is.Not.Null);
+            Assert.That(lineTextMessage.Text, Is.EqualTo(text));
         }
     }
 }
