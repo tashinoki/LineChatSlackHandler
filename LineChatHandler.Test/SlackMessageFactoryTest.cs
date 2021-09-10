@@ -8,6 +8,7 @@ using Line.Messaging.Webhooks;
 using LineChatSlackHandler.Factory;
 using LineChatSlackHandler.Repository;
 using LineChatSlackHandler.Models;
+using LineChatSlackHandler.Entity;
 
 namespace LineChatSlackHandler.Test
 {
@@ -25,12 +26,18 @@ namespace LineChatSlackHandler.Test
 
             // arange
             const string messageId = "hogehoge";
-            const string skackChannelId = "aaaaa";
+            const string slackChannelId = "aaaaa";
             const string text = "hello world";
             const string lineUseId = "aaaaa";
             const string lineBotId = "bbbbb";
 
             var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
+            mappingConfigRepository.Setup(r => r.GetWithLineUserIdAsync(lineUseId, lineBotId))
+                .ReturnsAsync(() => new ChannelMappingConfig
+                {
+                    SlackChannelId = slackChannelId,
+                    LineUserId = lineUseId
+                });
             var slackMessageFactory = new SlackMessageFactory(mappingConfigRepository.Object);
 
             var source = new WebhookEventSource(EventSourceType.User, "", lineUseId);
@@ -42,12 +49,12 @@ namespace LineChatSlackHandler.Test
 
             // assert
             Assert.That(slackMessage.Type, Is.EqualTo(SlackMessageType.Text));
-            Assert.That(slackMessage.Channel, Is.EqualTo(skackChannelId));
+            Assert.That(slackMessage.Channel, Is.EqualTo(slackChannelId));
 
             var slackTextMessage = slackMessage as SlackTextMessage;
 
             Assert.That(slackTextMessage, Is.Not.Null);
-            Assert.That(slackTextMessage.Text, Is.EqualTo(text));
+            Assert.That(slackTextMessage.Text, Is.EqualTo($"<@U0226MT50F6>\n{text}"));
         }
     }
 }
