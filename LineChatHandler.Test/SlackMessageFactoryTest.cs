@@ -25,7 +25,6 @@ namespace LineChatSlackHandler.Test
         {
 
             // arange
-            const string messageId = "hogehoge";
             const string slackChannelId = "aaaaa";
             const string text = "hello world";
             const string lineUseId = "aaaaa";
@@ -40,12 +39,13 @@ namespace LineChatSlackHandler.Test
                 });
             var slackMessageFactory = new SlackMessageFactory(mappingConfigRepository.Object);
 
-            var source = new WebhookEventSource(EventSourceType.User, "", lineUseId);
-            var eventMessage = new TextEventMessage("", text);
-            var messageEvent = new MessageEvent(source, 0, eventMessage, messageId);
+            var source = new WebhookEventSource(EventSourceType.User, "sourceId", lineUseId);
+            var eventMessage = new TextEventMessage("messageId", text);
+
 
             // act
-            var slackMessage = await slackMessageFactory.CreateSlackMessageAsync(lineBotId, messageEvent);
+            var slackMessage = await slackMessageFactory.CreateSlackMessageAsync(lineBotId, new MessageEvent(source, 0, eventMessage, "messageId"));
+
 
             // assert
             Assert.That(slackMessage.Type, Is.EqualTo(SlackMessageType.Text));
