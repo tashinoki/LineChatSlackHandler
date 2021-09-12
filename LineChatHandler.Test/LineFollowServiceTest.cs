@@ -22,7 +22,7 @@ namespace LineChatSlackHandler.Test
         [Test]
         public async Task CreateChannelMappingConfigWithWebhookEventWhenNotExists()
         {
-            // arrange
+            //// arrange
             const string botId = "aaaaa";
             const string userId = "bbbbb";
             var slackChannel = new Channel
@@ -33,7 +33,7 @@ namespace LineChatSlackHandler.Test
             ChannelMappingConfig channelMappingConfig = null;
 
             var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
-            
+
             // mapping config not exists
             mappingConfigRepository.Setup(r => r.GetWithLineUserIdAsync(botId, userId))
                 .ReturnsAsync(() => null);
@@ -51,11 +51,11 @@ namespace LineChatSlackHandler.Test
             var followEvent = new FollowEvent(source, 0, "");
 
 
-            // act
+            //// act
             await lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
 
 
-            // assert
+            //// assert
             Assert.That(channelMappingConfig, Is.Not.Null);
             Assert.That(channelMappingConfig.SlackChannelId, Is.EqualTo(slackChannel.Id));
             Assert.That(channelMappingConfig.LineBotId, Is.EqualTo(botId));
@@ -72,6 +72,48 @@ namespace LineChatSlackHandler.Test
                     IsDeleted = false
                 };
             }
+        }
+
+        [Test]
+        public async Task UpdateMappingConfigStateWhenAlreadyExists()
+        {
+            // arrange
+            const string botId = "aaaaa";
+            const string userId = "bbbbb";
+            var slackChannel = new Channel
+            {
+                Id = "ccccc"
+            };
+
+            var deletedChannelMappingConfig = new ChannelMappingConfig
+            {
+                SlackChannelId = slackChannel.Id,
+                LineBotId = botId,
+                LineUserId = userId,
+                IsDeleted = true
+            };
+
+            var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
+
+            // mapping config not exists
+            mappingConfigRepository.Setup(r => r.GetWithLineUserIdAsync(botId, userId))
+                .ReturnsAsync(() => deletedChannelMappingConfig);
+
+            var slackService = new Mock<ISlackChannelService>();
+            slackService.Setup(s => s.StartConversationAsync(userId))
+                .ReturnsAsync(() => slackChannel);
+
+            var lineFollowService = new LineFollowService(mappingConfigRepository.Object, slackService.Object);
+
+            var source = new WebhookEventSource(EventSourceType.User, "sourceId", userId);
+            var followEvent = new FollowEvent(source, 0, "");
+
+            // assert
+            Assert.That(deletedChannelMappingConfig, Is.Not.Null);
+            Assert.That(deletedChannelMappingConfig.SlackChannelId, Is.EqualTo(slackChannel.Id));
+            Assert.That(deletedChannelMappingConfig.LineBotId, Is.EqualTo(botId));
+            Assert.That(deletedChannelMappingConfig.LineUserId, Is.EqualTo(userId));
+            Assert.That(deletedChannelMappingConfig.IsDeleted, Is.False);
         }
     }
 }

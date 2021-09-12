@@ -27,7 +27,12 @@ namespace LineChatSlackHandler.Services
             if (mappingConfig is null)
             {
                 var slackChannel = await _slackChannelService.StartConversationAsync(lineUserId);
-                _mappingConfigRepository.Create(botId, lineUserId, slackChannel.Id);
+                var config = await _mappingConfigRepository.CreateAsync(botId, lineUserId, slackChannel.Id);
+            }
+            else if (mappingConfig.IsDeleted)
+            {
+                mappingConfig.IsDeleted = false;
+                var config = await _mappingConfigRepository.UpdateAsync(config);
             }
             return new LineWebhookHandleResult { };
         }
