@@ -9,7 +9,7 @@ using Line.Messaging.Webhooks;
 
 namespace LineChatSlackHandler.Test
 {
-    public class LineFollowServiceTest
+    public class ChannelMappingConfigServiceTest
     {
         [SetUp]
         public void SetUp()
@@ -18,7 +18,7 @@ namespace LineChatSlackHandler.Test
         }
 
         [Test]
-        public async Task CreateChannelMappingConfigWithWebhookEventWhenNotExists()
+        public async Task MakeChannelMappingConfig_CreateWithWebhookEvent_WhenNotExists()
         {
             //// arrange
             const string botId = "aaaaa";
@@ -66,7 +66,7 @@ namespace LineChatSlackHandler.Test
         }
 
         [Test]
-        public async Task UpdateMappingConfigStateWhenAlreadyDeleted()
+        public async Task MakeMappingConfig_UpdateState_WhenAlreadyDeleted()
         {
             // arrange
             const string botId = "aaaaa";
@@ -118,7 +118,7 @@ namespace LineChatSlackHandler.Test
         }
 
         [Test]
-        public async Task UpdateMappingConfigStateWhenAlreadyExists()
+        public async Task DeleteMappingConfig_UpdateState_WhenAlreadyExists()
         {
             // arrange
             const string botId = "aaaaa";
@@ -170,7 +170,7 @@ namespace LineChatSlackHandler.Test
         }
 
         [Test]
-        public async Task DeleteMappingConfigDoNothingWhenConfigNotExists()
+        public async Task DeleteMappingConfig_DoNothing_WhenConfigNotExists()
         {
             // arrange
             const string botId = "aaaaa";
