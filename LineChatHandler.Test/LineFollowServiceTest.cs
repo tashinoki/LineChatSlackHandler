@@ -2,11 +2,9 @@
 using NUnit.Framework;
 using Moq;
 using LineChatSlackHandler.Models;
-using LineChatSlackHandler.Factory;
 using LineChatSlackHandler.Repository;
 using LineChatSlackHandler.Entity;
 using LineChatSlackHandler.Services;
-using Line.Messaging;
 using Line.Messaging.Webhooks;
 
 namespace LineChatSlackHandler.Test
