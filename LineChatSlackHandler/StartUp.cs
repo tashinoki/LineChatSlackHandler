@@ -11,14 +11,13 @@ namespace LineChatSlackHandler
     {
         public override void Configure(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddSingleton<IChannelMappingService, ChannelMappingService>();
             builder.Services.AddSingleton<ILineChatService, LineChatService>();
             builder.Services.AddSingleton<ISlackService, SlackService>();
             builder.Services.AddSingleton<IChannelMappingConfigRepository, ChannelMappingConfigRepository>();
             builder.Services.AddSingleton<ISlackMessageFactory, SlackMessageFactory>();
             builder.Services.AddSingleton<ILineMessageFactory, LineMessageFactory>();
             builder.Services.AddSingleton<IHandleLineWebhookService, HandleLineWebhookService>();
-            builder.Services.AddSingleton<ILineFollowService, LineFollowService>();
+            builder.Services.AddSingleton<IChannelMappingConfigService, ChannelMappingConfigService>();
             builder.Services.AddSingleton<ISlackChannelService, SlackChannelService>();
             builder.Services.AddSingleton<ISlackApiClient, SlackApiClient>();
             builder.Services.AddSingleton<ILineUserService, LineUserService>();

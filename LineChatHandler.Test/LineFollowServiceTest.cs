@@ -49,7 +49,7 @@ namespace LineChatSlackHandler.Test
                     IsDeleted = false
                 });
 
-            var lineFollowService = new LineFollowService(mappingConfigRepository.Object, slackService.Object);
+            var lineFollowService = new ChannelMappingConfigService(mappingConfigRepository.Object, slackService.Object);
 
             var source = new WebhookEventSource(EventSourceType.User, "sourceId", userId);
             var followEvent = new FollowEvent(source, 0, "");
@@ -101,7 +101,7 @@ namespace LineChatSlackHandler.Test
                     IsDeleted = false
                 });
 
-            var lineFollowService = new LineFollowService(mappingConfigRepository.Object, slackService.Object);
+            var lineFollowService = new ChannelMappingConfigService(mappingConfigRepository.Object, slackService.Object);
 
             var source = new WebhookEventSource(EventSourceType.User, "sourceId", userId);
             var followEvent = new FollowEvent(source, 0, "");

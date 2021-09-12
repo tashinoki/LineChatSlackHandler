@@ -9,12 +9,12 @@ using LineChatSlackHandler.Entity;
 
 namespace LineChatSlackHandler.Services
 {
-    public class LineFollowService: ILineFollowService
+    public class ChannelMappingConfigService: IChannelMappingConfigService
     {
         private IChannelMappingConfigRepository _mappingConfigRepository;
         private ISlackChannelService _slackChannelService;
 
-        public LineFollowService(IChannelMappingConfigRepository mappingConfigRepository, ISlackChannelService slackChannelService)
+        public ChannelMappingConfigService(IChannelMappingConfigRepository mappingConfigRepository, ISlackChannelService slackChannelService)
         {
             _mappingConfigRepository = mappingConfigRepository;
             _slackChannelService = slackChannelService;
@@ -39,6 +39,20 @@ namespace LineChatSlackHandler.Services
             }
 
             return mappingConfig;
+        }
+
+        public async Task DeleteChannelMappingConfigAsync(string botId, UnfollowEvent unfollowEvent)
+        {
+            var lineUserId = unfollowEvent.Source.UserId;
+            var mappingConfig = await _mappingConfigRepository.GetWithLineUserIdAsync(botId, lineUserId);
+
+            if (mappingConfig is null || mappingConfig.IsDeleted)
+            {
+                return;
+            };
+
+            mappingConfig.IsDeleted = true;
+            await _mappingConfigRepository.UpdateAsync(mappingConfig);
         }
     }
 }
