@@ -168,5 +168,34 @@ namespace LineChatSlackHandler.Test
             Assert.That(mappingConfig.LineUserId, Is.EqualTo(userId));
             Assert.That(mappingConfig.IsDeleted, Is.True);
         }
+
+        [Test]
+        public async Task DeleteMappingConfigDoNothingWhenConfigNotExists()
+        {
+            // arrange
+            const string botId = "aaaaa";
+            const string userId = "bbbbb";
+
+            ChannelMappingConfig config = null;
+
+            var slackService = new Mock<ISlackChannelService>();
+            var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
+
+            mappingConfigRepository.Setup(r => r.GetWithLineUserIdAsync(botId, userId))
+                .ReturnsAsync(() => config);
+
+            var lineFollowService = new ChannelMappingConfigService(mappingConfigRepository.Object, slackService.Object);
+
+            var source = new WebhookEventSource(EventSourceType.User, "sourceId", userId);
+            var unfollowEvent = new UnfollowEvent(source, 0);
+
+
+            //// act
+            await lineFollowService.DeleteChannelMappingConfigAsync(botId, unfollowEvent);
+
+
+            // assert
+            Assert.That(config, Is.Null);
+        }
     }
 }
