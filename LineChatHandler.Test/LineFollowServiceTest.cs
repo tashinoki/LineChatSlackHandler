@@ -118,5 +118,57 @@ namespace LineChatSlackHandler.Test
             Assert.That(config.LineUserId, Is.EqualTo(userId));
             Assert.That(config.IsDeleted, Is.False);
         }
+
+        [Test]
+        public async Task UpdateMappingConfigStateWhenAlreadyExists()
+        {
+            // arrange
+            const string botId = "aaaaa";
+            const string userId = "bbbbb";
+            var slackChannel = new Channel
+            {
+                Id = "ccccc"
+            };
+
+            var mappingConfig = new ChannelMappingConfig
+            {
+                SlackChannelId = slackChannel.Id,
+                LineBotId = botId,
+                LineUserId = userId,
+                IsDeleted = false
+            };
+
+            var slackService = new Mock<ISlackChannelService>();
+            var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
+
+            mappingConfigRepository.Setup(r => r.GetWithLineUserIdAsync(botId, userId))
+                .ReturnsAsync(() => mappingConfig);
+
+            mappingConfigRepository.Setup(r => r.UpdateAsync(mappingConfig))
+                .ReturnsAsync(() => new ChannelMappingConfig
+                {
+                    SlackChannelId = slackChannel.Id,
+                    LineBotId = botId,
+                    LineUserId = userId,
+                    IsDeleted = true
+                });
+
+            var lineFollowService = new ChannelMappingConfigService(mappingConfigRepository.Object, slackService.Object);
+
+            var source = new WebhookEventSource(EventSourceType.User, "sourceId", userId);
+            var unfollowEvent = new UnfollowEvent(source, 0);
+
+
+            //// act
+            await lineFollowService.DeleteChannelMappingConfigAsync(botId, unfollowEvent);
+
+
+            // assert
+            Assert.That(mappingConfig, Is.Not.Null);
+            Assert.That(mappingConfig.SlackChannelId, Is.EqualTo(slackChannel.Id));
+            Assert.That(mappingConfig.LineBotId, Is.EqualTo(botId));
+            Assert.That(mappingConfig.LineUserId, Is.EqualTo(userId));
+            Assert.That(mappingConfig.IsDeleted, Is.True);
+        }
     }
 }
