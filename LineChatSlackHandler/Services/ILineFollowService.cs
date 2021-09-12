@@ -4,11 +4,12 @@ using System.Text;
 using LineChatSlackHandler.Models;
 using System.Threading.Tasks;
 using Line.Messaging.Webhooks;
+using LineChatSlackHandler.Entity;
 
 namespace LineChatSlackHandler.Services
 {
     public interface ILineFollowService
     {
-        public Task<LineWebhookHandleResult> MakeChannelMappingConfigAsync(string botId, FollowEvent followEvent);
+        public Task<ChannelMappingConfig> MakeChannelMappingConfigAsync(string botId, FollowEvent followEvent);
     }
 }

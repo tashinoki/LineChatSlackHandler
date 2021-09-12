@@ -31,7 +31,7 @@ namespace LineChatSlackHandler
 
             foreach(var webhookEvent in webhookEvents)
             {
-                _handleLineWebhookService.HandleAsync(destination, webhookEvent);
+                await _handleLineWebhookService.HandleAsync(destination, webhookEvent);
             }
             return;
             //var slackMessages = await _messageFactory.CreateSlackMessages(destination, webhookEvents);

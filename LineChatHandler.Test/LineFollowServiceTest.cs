@@ -30,8 +30,6 @@ namespace LineChatSlackHandler.Test
                 Id = "ccccc"
             };
 
-            ChannelMappingConfig channelMappingConfig = null;
-
             var mappingConfigRepository = new Mock<IChannelMappingConfigRepository>();
 
             // mapping config not exists
@@ -42,8 +40,14 @@ namespace LineChatSlackHandler.Test
             slackService.Setup(s => s.StartConversationAsync(userId))
                 .ReturnsAsync(() => slackChannel);
 
-            mappingConfigRepository.Setup(r => r.Create(botId, userId, slackChannel.Id))
-                .Callback(() => CreateMappingConfig(botId, userId, slackChannel.Id));
+            mappingConfigRepository.Setup(r => r.CreateAsync(botId, userId, slackChannel.Id))
+                .ReturnsAsync(() => new ChannelMappingConfig
+                {
+                    SlackChannelId = slackChannel.Id,
+                    LineUserId = userId,
+                    LineBotId = botId,
+                    IsDeleted = false
+                });
 
             var lineFollowService = new LineFollowService(mappingConfigRepository.Object, slackService.Object);
 
@@ -52,26 +56,15 @@ namespace LineChatSlackHandler.Test
 
 
             //// act
-            await lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
+            var config = await lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
 
 
             //// assert
-            Assert.That(channelMappingConfig, Is.Not.Null);
-            Assert.That(channelMappingConfig.SlackChannelId, Is.EqualTo(slackChannel.Id));
-            Assert.That(channelMappingConfig.LineBotId, Is.EqualTo(botId));
-            Assert.That(channelMappingConfig.LineUserId, Is.EqualTo(userId));
-            Assert.That(channelMappingConfig.IsDeleted, Is.False);
-
-            void CreateMappingConfig(string botId, string userId, string channelId)
-            {
-                channelMappingConfig = new ChannelMappingConfig
-                {
-                    SlackChannelId = channelId,
-                    LineUserId = userId,
-                    LineBotId = botId,
-                    IsDeleted = false
-                };
-            }
+            Assert.That(config, Is.Not.Null);
+            Assert.That(config.SlackChannelId, Is.EqualTo(slackChannel.Id));
+            Assert.That(config.LineBotId, Is.EqualTo(botId));
+            Assert.That(config.LineUserId, Is.EqualTo(userId));
+            Assert.That(config.IsDeleted, Is.False);
         }
 
         [Test]
