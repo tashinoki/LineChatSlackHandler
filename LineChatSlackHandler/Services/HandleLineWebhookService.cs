@@ -11,16 +11,16 @@ namespace LineChatSlackHandler.Services
     public class HandleLineWebhookService: IHandleLineWebhookService
     {
         private ISlackService _slackService;
-        private ILineFollowService _lineFollowService;
+        private IChannelMappingConfigService _channelMappingConfigService;
         private ISlackMessageFactory _messageFactory;
 
         public HandleLineWebhookService(
             ISlackService slackService,
-            ILineFollowService lineFollowService,
+            IChannelMappingConfigService channelMappingConfigService,
             ISlackMessageFactory messageFactory)
         {
             _slackService = slackService;
-            _lineFollowService = lineFollowService;
+            _channelMappingConfigService = channelMappingConfigService;
             _messageFactory = messageFactory;
         }
 
@@ -44,9 +44,17 @@ namespace LineChatSlackHandler.Services
                     if (followEvent is null)
                         throw new Exception("Line.Webhook.FollowEvent にキャストできませんでした。");
 
-                    await _lineFollowService.MakeChannelMappingConfigAsync(botId, followEvent);
+                    await _channelMappingConfigService.MakeChannelMappingConfigAsync(botId, followEvent);
                     return;
 
+                case WebhookEventType.Unfollow:
+                    var unfollowEvent = webhook as UnfollowEvent;
+
+                    if (unfollowEvent is null)
+                        throw new Exception("Line.Webhook.FollowEvent にキャストできませんでした。");
+
+                    await _channelMappingConfigService.DeleteChannelMappingConfigAsync(botId, unfollowEvent);
+                    return;
                 default:
                     throw new Exception("");
 

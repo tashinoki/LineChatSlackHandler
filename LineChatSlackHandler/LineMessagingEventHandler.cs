@@ -31,22 +31,9 @@ namespace LineChatSlackHandler
 
             foreach(var webhookEvent in webhookEvents)
             {
-                _handleLineWebhookService.HandleAsync(destination, webhookEvent);
+                await _handleLineWebhookService.HandleAsync(destination, webhookEvent);
             }
-            return;
-            //var slackMessages = await _messageFactory.CreateSlackMessages(destination, webhookEvents);
-
-            //await _slackService.SendMessagesAsync(slackMessages);
-            //var lineMessagingClient = new LineMessagingClient(Environment.GetEnvironmentVariable("LineAccessToken"));
-            //try
-            //{
-            //    await lineMessagingClient.PushMessageAsync("U57853f60cf6cbc8db966086785a9f591", new List<ISendMessage> { new TextMessage("����ɂ���") });
-            //}
-            //catch (Exception e)
-            //{
-            //    log.LogInformation(e.Message);
-            //}
-        
+            return;        
         }
     }
 }

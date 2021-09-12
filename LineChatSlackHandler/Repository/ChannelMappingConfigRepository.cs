@@ -4,6 +4,7 @@ using System.Linq;
 using LineChatSlackHandler.Entity;
 using Microsoft.Azure.Cosmos.Table;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace LineChatSlackHandler.Repository
 {
@@ -86,7 +87,7 @@ namespace LineChatSlackHandler.Repository
             }
         }
 
-        public async Task Create(string botId, string lineUserId, string slackChannelId)
+        public async Task<ChannelMappingConfig> CreateAsync(string botId, string lineUserId, string slackChannelId)
         {
             var mappingConfig = new ChannelMappingConfig
             {
@@ -99,7 +100,31 @@ namespace LineChatSlackHandler.Repository
             };
 
             var operation = TableOperation.InsertOrMerge(mappingConfig);
-            var response = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
+            var result = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
+
+            if (result.HttpStatusCode is 200)
+            {
+                return result.Result as ChannelMappingConfig;
+            }
+            else
+            {
+                throw new Exception("作成に失敗しました。");
+            }
+        }
+
+        public async Task<ChannelMappingConfig> UpdateAsync(ChannelMappingConfig config)
+        {
+            var operation = TableOperation.Merge(config);
+            var result = await _channelMappingConfigurationsTable.ExecuteAsync(operation);
+
+            if (result.HttpStatusCode is 200)
+            {
+                return result.Result as ChannelMappingConfig;
+            }
+            else
+            {
+                throw new Exception("作成に失敗しました。");
+            }
         }
     }
 }
